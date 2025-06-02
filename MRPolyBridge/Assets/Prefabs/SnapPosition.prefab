@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4990400612025358503}
-  m_Layer: 4
+  m_Layer: 7
   m_Name: SnapPosition
-  m_TagString: Untagged
+  m_TagString: BridgeNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26,12 +26,11 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6125703351261950071}
   - {fileID: 845993192465415408}
-  - {fileID: 2843202114424588638}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2619308739059620703
@@ -48,7 +47,7 @@ GameObject:
   - component: {fileID: 6075638163439210927}
   - component: {fileID: 8256027636428518537}
   - component: {fileID: 4695481265183266422}
-  m_Layer: 4
+  m_Layer: 7
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +296,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6125703351261950071}
   - component: {fileID: 6763947789214642710}
-  m_Layer: 4
+  - component: {fileID: 4550623420198445831}
+  m_Layer: 7
   m_Name: SnapInteractable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2843202114424588638}
   m_Father: {fileID: 4990400612025358503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6763947789214642710
@@ -338,6 +339,33 @@ MonoBehaviour:
   _rigidbody: {fileID: 0}
   _snapPoseDelegate: {fileID: 0}
   _movementProvider: {fileID: 0}
+--- !u!54 &4550623420198445831
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2651589802775334462}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 16
+  m_CollisionDetection: 0
 --- !u!1 &4648957546199355198
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +378,7 @@ GameObject:
   - component: {fileID: 3845924137290850890}
   - component: {fileID: 6594029098843119760}
   - component: {fileID: 1517359183388335866}
-  m_Layer: 4
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,12 +393,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4648957546199355198}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 4990400612025358503}
+  m_Father: {fileID: 6125703351261950071}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3845924137290850890
 MeshFilter:
