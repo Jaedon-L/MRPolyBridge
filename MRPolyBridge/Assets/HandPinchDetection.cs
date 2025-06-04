@@ -213,7 +213,7 @@ public class HandPinchDetection : MonoBehaviour
         {
             currentLineRenderer.SetPosition(0, firstNodeTransform.position);
             currentLineRenderer.SetPosition(1, tip.position);
-            Debug.Log($"[UpdateSelectingEdgePreview] Preview from {firstNodeTransform.position} to {tip.position}");
+            // Debug.Log($"[UpdateSelectingEdgePreview] Preview from {firstNodeTransform.position} to {tip.position}");
         }
     }
 
@@ -296,6 +296,7 @@ public class HandPinchDetection : MonoBehaviour
         {
             // full 3D rotation for support beams
             rawRot = Quaternion.FromToRotation(Vector3.right, rawDir);
+
         }
         else
         {
@@ -324,6 +325,7 @@ public class HandPinchDetection : MonoBehaviour
         {
             beamRb.isKinematic = true;
             Debug.Log("[SpawnBeam] Support beam remains kinematic.");
+            // beam.AddComponent<SupportTracker>().enabled = true;
         }
         else
         {
@@ -333,12 +335,26 @@ public class HandPinchDetection : MonoBehaviour
 
         // Attach hinge joints
         AttachHingeJoints(beam, A.GetComponent<Rigidbody>(), B.GetComponent<Rigidbody>());
+        // 2) Register this beam in BridgeGraph
+        var nodeA = A.GetComponent<SnapInteractable>();
+        var nodeB = B.GetComponent<SnapInteractable>();
+        BridgeGraph.RegisterBeam(beam, nodeA, nodeB);
 
-        // If this is support, apply support logic to existing beams at these nodes
+        // 3) If this is a SUPPORT beam, immediately mark its two endpoint nodes:
         if (isSupport)
         {
-            ApplySupportToConnectedBeams(A, B);
+            BridgeGraph.MarkNodeSupported(nodeA);
+            BridgeGraph.MarkNodeSupported(nodeB);
+
+            // 4) Add SupportCleanup so we unmark nodes when this support is destroyed
+            var cleanup = beam.AddComponent<SupportTracker>();
+            cleanup.Initialize(nodeA, nodeB);
         }
+        // // If this is support, apply support logic to existing beams at these nodes
+        // if (isSupport)
+        // {
+        //     ApplySupportToConnectedBeams(A, B);
+        // }
     }
 
     private void AttachHingeJoints(GameObject beam, Rigidbody rbA, Rigidbody rbB)
@@ -483,9 +499,15 @@ public class BridgeBeamManualBreak : MonoBehaviour
             if (mag > breakForceThreshold)
             {
                 Debug.Log($"[BridgeBeamManualBreak] Breaking hinge on {gameObject.name} at force {mag:F1} N (threshold {breakForceThreshold})");
+                BridgeGraph.UnregisterBeam(gameObject);
                 Destroy(gameObject);
                 return;
             }
         }
+    }
+    void OnDestroy()
+    {
+        // In case something else destroys this object, still unregister
+        BridgeGraph.UnregisterBeam(gameObject);
     }
 }
