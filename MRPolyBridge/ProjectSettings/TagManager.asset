@@ -24,6 +24,7 @@ TagManager:
   - QDSUIDestructiveButton
   - BridgeNode
   - UI
+  - Car
   layers:
   - Default
   - TransparentFX
