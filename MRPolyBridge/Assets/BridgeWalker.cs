@@ -16,9 +16,9 @@ public class BridgeWalker : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        // (Optionally) lock rotations so the cube doesn’t tumble
-        _rb.constraints = RigidbodyConstraints.FreezeRotationX 
-                        | RigidbodyConstraints.FreezeRotationZ;
+        // // (Optionally) lock rotations so the cube doesn’t tumble
+        // _rb.constraints = RigidbodyConstraints.FreezeRotationX 
+        //                 | RigidbodyConstraints.FreezeRotationZ;
     }
 
     void FixedUpdate()

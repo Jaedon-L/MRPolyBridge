@@ -25,8 +25,8 @@ public static class BridgeGraph
     {
         baseBreakForce = 15f,
         baseBreakTorque = 6f,
-        supportBonusForce = 3f,
-        supportBonusTorque = 2f
+        supportBonusForce = 2f,
+        supportBonusTorque = 1f
     };
 
     public static BridgePhysicsConfig GetCurrentConfig() => _config;
@@ -361,5 +361,15 @@ public static class BridgeGraph
         }
 
     }
-
+        /// <summary>
+    /// Empties out all dictionaries so that no old references remain.
+    /// </summary>
+    public static void ClearAll()
+    {
+        _nodeToBeams.Clear();
+        _beamToNodes.Clear();
+        _supportedNodeIds.Clear();
+        _beamBonusApplied.Clear();
+        Debug.Log("[BridgeGraph] All registry data cleared.");
+    }
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Oculus.Interaction;
 using UnityEngine;
-using TMPro; 
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("The only 'car' GameObject or tag you use. We check collisions with the finish zone.")]
     [SerializeField] private string _carTag = "Car"; // assume your car has tag "Player"
     [Tooltip("Exactly one LevelEndTrigger in each level prefab. We will subscribe at runtime.")]
-    [SerializeField] private GameObject _levelEndTriggerPrefab; 
+    [SerializeField] private GameObject _levelEndTriggerPrefab;
     // (This is optional if your LevelPrefabs already include the trigger; see later notes.)
 
     [Header("UI REFERENCES")]
@@ -23,12 +23,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshPro _levelLabel;
     [Tooltip("Panel (or any GameObject) you show when the player wins.")]
     [SerializeField] private GameObject _youWinPanel;
+    [SerializeField] private TextMeshPro winningText;
 
     private int _currentLevelIndex = 0;        // zero‐based index into _levelPrefabs
     private GameObject _currentLevelInstance;  // the spawned "level" root GameObject
 
     private enum GameState { WaitingToStart, Playing, LevelComplete, AllFinished }
     private GameState _state = GameState.WaitingToStart;
+    // ───── NEW: FOUR “DIRECTIONAL CONTROL” OBJECTS ───────────────────────
+    // Each of these must have an InteractableUnityEventWrapper component on it.
+    [Header("CAR CONTROLS")]
+    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Up'")]
+    [SerializeField] private GameObject _upControl;
+    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Down'")]
+    [SerializeField] private GameObject _downControl;
+    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Left'")]
+    [SerializeField] private GameObject _leftControl;
+    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Right'")]
+    [SerializeField] private GameObject _rightControl;
+    // ────────────────────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -67,6 +80,7 @@ public class GameManager : MonoBehaviour
             case GameState.AllFinished:
                 // (Optional) restart from Level 1 or disable UI
                 Debug.Log("All levels completed!");
+                winningText.text = "You finished all the levels! Stay tuned for more!!";
                 break;
 
             // While “Playing,” the button should be hidden or disabled
@@ -91,6 +105,8 @@ public class GameManager : MonoBehaviour
         // 1) Destroy any leftover level from before:
         if (_currentLevelInstance != null)
             Destroy(_currentLevelInstance);
+            ClearAllBridgePieces();
+
 
         // 2) Instantiate the new level at origin
         _currentLevelInstance = Instantiate(
@@ -98,6 +114,17 @@ public class GameManager : MonoBehaviour
             Vector3.zero,
             Quaternion.identity
         );
+
+        BridgeWalker walker = _currentLevelInstance.GetComponentInChildren<BridgeWalker>();
+        if (walker == null)
+        {
+            Debug.LogError("[GameManager] Could not find a BridgeWalker in the spawned level.");
+        }
+        else
+        {
+            // 2) Wire up all four controls to this walker instance:
+            WireUpCarControls(walker);
+        }
 
         // 3) Find (or create) the trigger that detects when the car finishes.
         //    We assume each level prefab either:
@@ -196,5 +223,112 @@ public class GameManager : MonoBehaviour
         {
             _levelLabel.text = $"Level: {_currentLevelIndex + 1}";
         }
+    }
+    /// <summary>
+    /// Given a BridgeWalker on the newly spawned car, hook up each of the four
+    /// InteractableUnityEventWrapper controls to call MoveUp/MoveDown/MoveLeft/MoveRight.
+    /// </summary>
+    private void WireUpCarControls(BridgeWalker walker)
+    {
+        // For each control we must:
+        //   a) Check if the assigned GameObject is not null.
+        //   b) Get its InteractableUnityEventWrapper component.
+        //   c) Register the appropriate method on BridgeWalker.
+
+        if (_upControl != null)
+        {
+            var wrapper = _upControl.GetComponent<InteractableUnityEventWrapper>();
+            if (wrapper != null)
+            {
+                // Clear any previous listeners, then add MoveUp
+                wrapper.WhenSelect.RemoveAllListeners();
+                wrapper.WhenSelect.AddListener(walker.StartMoveUp);
+                wrapper.WhenUnselect.AddListener(walker.StopMove);
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] _upControl has no InteractableUnityEventWrapper.");
+            }
+        }
+
+        if (_downControl != null)
+        {
+            var wrapper = _downControl.GetComponent<InteractableUnityEventWrapper>();
+            if (wrapper != null)
+            {
+                wrapper.WhenSelect.RemoveAllListeners();
+                wrapper.WhenSelect.AddListener(walker.StartMoveDown);
+                wrapper.WhenUnselect.AddListener(walker.StopMove);
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] _downControl has no InteractableUnityEventWrapper.");
+            }
+        }
+
+        if (_leftControl != null)
+        {
+            var wrapper = _leftControl.GetComponent<InteractableUnityEventWrapper>();
+            if (wrapper != null)
+            {
+                wrapper.WhenSelect.RemoveAllListeners();
+                wrapper.WhenSelect.AddListener(walker.StartMoveLeft);
+                wrapper.WhenUnselect.AddListener(walker.StopMove);
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] _leftControl has no InteractableUnityEventWrapper.");
+            }
+        }
+
+        if (_rightControl != null)
+        {
+            var wrapper = _rightControl.GetComponent<InteractableUnityEventWrapper>();
+            if (wrapper != null)
+            {
+                wrapper.WhenSelect.RemoveAllListeners();
+                wrapper.WhenSelect.AddListener(walker.StartMoveRight);
+                wrapper.WhenUnselect.AddListener(walker.StopMove);
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] _rightControl has no InteractableUnityEventWrapper.");
+            }
+        }
+
+        Debug.Log($"[GameManager] Wired up controls to BridgeWalker on {walker.gameObject.name}");
+    }
+    /// <summary>
+    /// Call this (for example, from a UI “Clear” button) to destroy every
+    /// SnapInteractable node, hinge‐beam, and support‐beam in the scene.
+    /// </summary>
+    public void ClearAllBridgePieces()
+    {
+        // 1) Destroy every SnapInteractable (nodes):
+        var allNodes = FindObjectsByType<SnapInteractable>(FindObjectsSortMode.None);
+        for (int i = 0; i < allNodes.Length; i++)
+        {
+            Destroy(allNodes[i].transform.root.gameObject);
+        }
+
+        // 2) Destroy every beam (anything with a HingeJoint):
+        var allHinges = FindObjectsByType<HingeJoint>(FindObjectsSortMode.None);
+        for (int i = 0; i < allHinges.Length; i++)
+        {
+            Destroy(allHinges[i].gameObject);
+        }
+
+        // 3) Destroy any support beams (anything with a SupportTracker):
+        var allSupports = FindObjectsByType<SupportTracker>(FindObjectsSortMode.None);
+        for (int i = 0; i < allSupports.Length; i++)
+        {
+            Destroy(allSupports[i].gameObject);
+        }
+
+        // Optionally, clear any internal graph data right away:
+        // (If you want to be sure BridgeGraph has no leftover references.)
+        BridgeGraph.ClearAll();   // ← see note below
+
+        Debug.Log("[GameManager] Cleared all nodes, beams, and support‐beams.");
     }
 }
