@@ -23,12 +23,12 @@ public class HandPinchDetection : MonoBehaviour
     [SerializeField] private OVRHand rightHand;
 
     [Header("Bridge Settings")]
-    [SerializeField] private float breakForceThreshold = 1000f;
-    [SerializeField] private float breakTorqueThreshold = 500f;
+    [SerializeField] private float breakForceThreshold = 15f;
+    [SerializeField] private float breakTorqueThreshold = 8f;
 
     [Header("Support Settings")]
-    [SerializeField] private float supportBonusForce = 1000f;
-    [SerializeField] private float supportBonusTorque = 500f;
+    [SerializeField] private float supportBonusForce = 2f;
+    [SerializeField] private float supportBonusTorque = 1f;
 
     [Header("Snap Settings")]
     [Tooltip("Size of each grid cell. Nodes will land on the nearest multiple of this in X, Y, and Z.")]
@@ -152,6 +152,7 @@ public class HandPinchDetection : MonoBehaviour
         si.InjectRigidbody(snapAreaRb);
         go.tag = "BridgeNode";
         Debug.Log($"[SpawnSnapNode] Spawned node at {spawnPos}");
+        
     }
 
     #endregion
@@ -350,11 +351,7 @@ public class HandPinchDetection : MonoBehaviour
             var cleanup = beam.AddComponent<SupportTracker>();
             cleanup.Initialize(nodeA, nodeB);
         }
-        // // If this is support, apply support logic to existing beams at these nodes
-        // if (isSupport)
-        // {
-        //     ApplySupportToConnectedBeams(A, B);
-        // }
+
     }
 
     private void AttachHingeJoints(GameObject beam, Rigidbody rbA, Rigidbody rbB)
@@ -412,7 +409,7 @@ public class HandPinchDetection : MonoBehaviour
         Debug.Log($"[AttachHingeJoints] HingeB attached with breakForce={breakForceThreshold}, breakTorque={breakTorqueThreshold}");
 
         // Add manual break monitor
-        beam.AddComponent<BridgeBeamManualBreak>().breakForceThreshold = breakForceThreshold;
+        beam.AddComponent<BridgeBeamManualBreak>().currentForceThreshold = breakForceThreshold;
     }
 
     private void ApplySupportToConnectedBeams(Transform nodeA, Transform nodeB)
@@ -487,18 +484,21 @@ public class HandPinchDetection : MonoBehaviour
 
 public class BridgeBeamManualBreak : MonoBehaviour
 {
-    [HideInInspector] public float breakForceThreshold = 1000f;
+    [HideInInspector] public float currentForceThreshold = 15f;
 
     void FixedUpdate()
     {
         var hinges = GetComponents<HingeJoint>();
         foreach (var hinge in hinges)
         {
+            // Read the **current** breakForce & breakTorque directly from the hinge:
+            currentForceThreshold  = hinge.breakForce;
+            float currentTorqueThreshold = hinge.breakTorque;
             Vector3 reaction = hinge.currentForce;
             float mag = reaction.magnitude;
-            if (mag > breakForceThreshold)
+            if (mag > currentForceThreshold)
             {
-                Debug.Log($"[BridgeBeamManualBreak] Breaking hinge on {gameObject.name} at force {mag:F1} N (threshold {breakForceThreshold})");
+                Debug.Log($"[BridgeBeamManualBreak] Breaking hinge on {gameObject.name} at force {mag:F1} N (threshold {currentForceThreshold})");
                 BridgeGraph.UnregisterBeam(gameObject);
                 Destroy(gameObject);
                 return;

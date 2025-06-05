@@ -23,6 +23,7 @@ TagManager:
   - QDSUIToggleSwitch
   - QDSUIDestructiveButton
   - BridgeNode
+  - UI
   layers:
   - Default
   - TransparentFX

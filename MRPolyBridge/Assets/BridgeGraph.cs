@@ -23,10 +23,10 @@ public static class BridgeGraph
 {
     private static BridgePhysicsConfig _config = new()
     {
-        baseBreakForce = 1000f,
-        baseBreakTorque = 500f,
-        supportBonusForce = 250f,
-        supportBonusTorque = 100f
+        baseBreakForce = 15f,
+        baseBreakTorque = 6f,
+        supportBonusForce = 3f,
+        supportBonusTorque = 2f
     };
 
     public static BridgePhysicsConfig GetCurrentConfig() => _config;
@@ -82,6 +82,18 @@ public static class BridgeGraph
             hinge.breakForce = _config.baseBreakForce;
             hinge.breakTorque = _config.baseBreakTorque;
         }
+        // ——————————————————————————————————————————————————————————
+        // (2) ***NEW:*** If either endpoint node is already supported, immediately apply its bonus:
+        if (_supportedNodeIds.Contains(idA))
+        {
+            ApplySupportBonusFromNode(idA);
+        }
+        if (_supportedNodeIds.Contains(idB))
+        {
+            ApplySupportBonusFromNode(idB);
+        }
+        // Now this new beam’s hinges will get the same +supportBonus that older beams did.
+        // ——————————————————————————————————————————————————————————
     }
 
     /// <summary>
@@ -331,13 +343,6 @@ public static class BridgeGraph
             jl.max = 0f;
             hinge.limits = jl;
         }
-        // // Option A: freeze with constraints, leaving non-kinematic
-        // var rb = beamGO.GetComponent<Rigidbody>();
-        // if (rb != null)
-        // {
-        //     rb.constraints = RigidbodyConstraints.FreezeAll;
-        //     Debug.Log($"[BridgeGraph]   → Frozen Rigidbody on '{beamGO.name}'");
-        // }
     }
 
     private static void UnlockBeamHinges(int beamId)
@@ -354,35 +359,7 @@ public static class BridgeGraph
             jl.max = +1f;
             hinge.limits = jl;
         }
-        // // Option A: remove constraints
-        // var rb = beamGO.GetComponent<Rigidbody>();
-        // if (rb != null)
-        // {
-        //     rb.constraints = RigidbodyConstraints.None;
-        //     Debug.Log($"[BridgeGraph]   → Unfrozen Rigidbody on '{beamGO.name}'");
-        // }
-    }
-//     /// <summary>
-// /// Return a list of all SnapInteractable instanceIDs directly connected to this one (via a beam).
-// /// </summary>
-// public static List<int> GetConnectedNodeIds(int nodeId)
-// {
-//     var result = new List<int>();
-//     if (!_nodeToBeams.TryGetValue(nodeId, out var beamsAtNode))
-//         return result;
 
-//     foreach (GameObject beamGO in beamsAtNode)
-//     {
-//         int beamId = beamGO.GetInstanceID();
-//         if (_beamToNodes.TryGetValue(beamId, out var pair))
-//         {
-//             // pair.nodeAId and pair.nodeBId are the two endpoints for this beam
-//             if (pair.nodeAId == nodeId && pair.nodeBId != nodeId)
-//                 result.Add(pair.nodeBId);
-//             else if (pair.nodeBId == nodeId && pair.nodeAId != nodeId)
-//                 result.Add(pair.nodeAId);
-//         }
-//     }
-//     return result;
-// }
+    }
+
 }
