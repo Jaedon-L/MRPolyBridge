@@ -30029,7 +30029,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2002156352}
   - component: {fileID: 2002156351}
-  - component: {fileID: 2002156353}
   - component: {fileID: 2002156354}
   m_Layer: 0
   m_Name: HandManager
@@ -30079,32 +30078,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2002156353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002156350}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3f80835241713d4ba7f819668c69fbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snapAreaRb: {fileID: 1724705358}
-  snapInteractablePrefab: {fileID: 239328372230181868, guid: fa6d020f46359f14b95672d4bacc3b6c, type: 3}
-  woodBeamPrefab: {fileID: 4407987262384533846, guid: c8ea4fd247803f34087831f3daa74b79, type: 3}
-  supportBeamPrefab: {fileID: 4407987262384533846, guid: 3db91828ab619594db731274dd84ccc4, type: 3}
-  edgePreviewPrefab: {fileID: 8673859971190902611, guid: 9d6664f725c004248885210355712cdc, type: 3}
-  leftSkeleton: {fileID: 609312633}
-  lefthand: {fileID: 609312634}
-  rightSkeleton: {fileID: 359899543}
-  rightHand: {fileID: 359899544}
-  breakForceThreshold: 4000
-  supportLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  supportRayLength: 0.76
 --- !u!114 &2002156354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30644,6 +30617,10 @@ PrefabInstance:
     - target: {fileID: 984354080134106425, guid: c2e00db6d2dfa42ac8d821db8d493a44, type: 3}
       propertyPath: m_Name
       value: MRUK
+      objectReference: {fileID: 0}
+    - target: {fileID: 984354080134106425, guid: c2e00db6d2dfa42ac8d821db8d493a44, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8047981335285221976, guid: c2e00db6d2dfa42ac8d821db8d493a44, type: 3}
       propertyPath: m_LocalPosition.x
@@ -34800,7 +34777,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5327428406052963930, guid: e2cdddf2ffae56a4097bf801ec394fd7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8819249476660386516, guid: e2cdddf2ffae56a4097bf801ec394fd7, type: 3}
       propertyPath: m_LocalPosition.x
