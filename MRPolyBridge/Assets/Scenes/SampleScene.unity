@@ -2705,6 +2705,10 @@ MonoBehaviour:
   supportMode: {fileID: 2097642968}
   OnText: 'Building: Support beams'
   OffText: 'Building: Platform'
+  roundedBoxEditor: {fileID: 0}
+  colorPropertyName: _Color
+  onColor: {r: 0, g: 0, b: 0, a: 0}
+  offColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &246183248
 GameObject:
   m_ObjectHideFlags: 0
@@ -33516,6 +33520,10 @@ MonoBehaviour:
   supportMode: {fileID: 472468972650814077}
   OnText: Building Mode
   OffText: Edit/Delete Mode
+  roundedBoxEditor: {fileID: 472468973916723702}
+  colorPropertyName: _Color
+  onColor: {r: 0, g: 0, b: 1, a: 0.6509804}
+  offColor: {r: 1, g: 0.5254902, b: 0, a: 0.6509804}
 --- !u!1 &472468973916723698
 GameObject:
   m_ObjectHideFlags: 0
@@ -33547,7 +33555,7 @@ Transform:
   m_GameObject: {fileID: 472468973916723698}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.015, z: 0.026}
   m_LocalScale: {x: 2.69, y: 0.77, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33785,6 +33793,10 @@ MonoBehaviour:
   supportMode: {fileID: 0}
   OnText: 
   OffText: 
+  roundedBoxEditor: {fileID: 0}
+  colorPropertyName: _Color
+  onColor: {r: 0, g: 0, b: 0, a: 0}
+  offColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &472468973945457853
 PrefabInstance:
   m_ObjectHideFlags: 0
