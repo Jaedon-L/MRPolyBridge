@@ -5,15 +5,15 @@ using Oculus.Interaction; // Required for MaterialPropertyBlockEditor
 public class TextChanger : MonoBehaviour
 {
     [Header("Display Text")]
-    [SerializeField] private TextMeshPro supportMode;
-    [SerializeField] private string OnText;
-    [SerializeField] private string OffText;
+    [SerializeField] TextMeshPro supportMode;
+    [SerializeField] string OnText;
+    [SerializeField] string OffText;
 
     [Header("Optional Visual Feedback for Button")]
-    [SerializeField] private MaterialPropertyBlockEditor roundedBoxEditor;
-    [SerializeField] private string colorPropertyName = "_Color"; // or "_BaseColor" depending on shader
-    [SerializeField] private Color onColor;
-    [SerializeField] private Color offColor;
+    [SerializeField] MaterialPropertyBlockEditor roundedBoxEditor;
+    [SerializeField] string colorPropertyName = "_Color"; // or "_BaseColor" depending on shader
+    [SerializeField] Color onColor;
+    [SerializeField] Color offColor;
 
     private bool supportModeState;
 
