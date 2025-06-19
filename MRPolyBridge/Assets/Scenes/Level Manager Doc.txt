@@ -1,0 +1,7 @@
+Game Manager requires: Level Manager and Hand Pinch Detection components. 
+
+Add Level Manager UI component to the scene and hook up all Level Buttons and required components.
+
+Add Level Manager component to the scene. Clicking on Add Level button creates a new asset for the level. Make sure you hook up the prefab for each level to the respective asset created.
+
+TAKE A LOOK AT (Maliq) SCENE TO SEE HOW IT WORKS
