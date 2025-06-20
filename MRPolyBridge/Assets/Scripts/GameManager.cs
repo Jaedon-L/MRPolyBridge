@@ -192,8 +192,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitializeLevelBridgeSettings()
     {
-        pinchDetection.breakForceThreshold = levelManager.levels[_currentLevelIndex].breakForceThreshold;
-        pinchDetection.breakTorqueThreshold = levelManager.levels[_currentLevelIndex].breakTorqueThreshold;
+        pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
+        pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
     }
 
     /// <summary>

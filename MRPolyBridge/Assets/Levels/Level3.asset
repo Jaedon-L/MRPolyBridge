@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 3
   levelPrefab: {fileID: 8670892056882968229, guid: 58d8369d635cdb048820d461e7392dab, type: 3}
-  isUnlocked: 1
-  breakForceThreshold: 11
-  breakTorqueThreshold: 6
+  isUnlocked: 0
+  supportBonusForce: 3
+  supportBonusTorque: 2
