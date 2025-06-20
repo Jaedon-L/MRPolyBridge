@@ -23,8 +23,8 @@ public class HandPinchDetection : MonoBehaviour
     [SerializeField] private OVRHand rightHand;
 
     [Header("Bridge Settings")]
-    [SerializeField] private float breakForceThreshold = 15f;
-    [SerializeField] private float breakTorqueThreshold = 8f;
+    public float breakForceThreshold = 15f;
+    public float breakTorqueThreshold = 8f;
 
     [Header("Support Settings")]
     [SerializeField] private float supportBonusForce = 2f;

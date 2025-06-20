@@ -1,13 +1,16 @@
-using System.Collections.Generic;
 using Oculus.Interaction;
-using UnityEngine;
+using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     [Header("LEVEL SETUP")]
-    [Tooltip("Drag your level‐prefabs here in order: Level 1, Level 2, …")]
-    [SerializeField] private List<GameObject> _levelPrefabs;
+    [Tooltip("Drag your level scriptableObject here in order: Level 1, Level 2, …")]
+    [SerializeField] private LevelManager levelManager;
+    [SerializeField] private HandPinchDetection pinchDetection;
 
     [Header("CAR & TARGET")]
     [Tooltip("The only 'car' GameObject or tag you use. We check collisions with the finish zone.")]
@@ -24,6 +27,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Panel (or any GameObject) you show when the player wins.")]
     [SerializeField] private GameObject _youWinPanel;
     [SerializeField] private TextMeshPro winningText;
+
 
     private int _currentLevelIndex = 0;        // zero‐based index into _levelPrefabs
     private GameObject _currentLevelInstance;  // the spawned "level" root GameObject
@@ -52,10 +56,16 @@ public class GameManager : MonoBehaviour
         if (_youWinPanel != null)
             _youWinPanel.SetActive(false);
 
+        // Initialize the players current level
+        LoadCurrentLevel();
+
         // Show “Level 1” but don’t spawn anything yet:
         UpdateLevelLabel();
-    }
 
+        // Saving the current level locked state for level 1
+        if(_currentLevelIndex == 0)
+            SaveLevelState(_currentLevelIndex, true);
+    }
 
     /// <summary>
     /// Called when the “Start Game” or “Next Level” button is pressed.
@@ -67,7 +77,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.WaitingToStart:
                 // First time: spawn level 0
-                SpawnCurrentLevel();
+                SpawnCurrentLevel(_currentLevelIndex);
                 _state = GameState.Playing;
                 _startOrNextButton.SetActive(false);
                 break;
@@ -92,13 +102,30 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Load the player's current level from the saved data
+    /// </summary>
+    private void LoadCurrentLevel()
+    {
+        if (PlayerPrefs.HasKey("CurrentLevel"))
+        {
+            _currentLevelIndex = PlayerPrefs.GetInt("CurrentLevel");
+        }
+        else
+        {
+            // Default to the first level if no data is found
+            _currentLevelIndex = 0;
+        }
+    }
+
+    /// <summary>
     /// Spawns the prefab at _currentLevelIndex, and wires up its LevelEndTrigger.
     /// </summary>
-    private void SpawnCurrentLevel()
+    public void SpawnCurrentLevel(int levelNumber)
     {
-        if (_currentLevelIndex < 0 || _currentLevelIndex >= _levelPrefabs.Count)
+        //if (_currentLevelIndex < 0 || _currentLevelIndex >= _levelPrefabs.Count)
+        if (levelNumber < 0 || levelNumber >= levelManager.levels.Count)
         {
-            Debug.LogError($"[GameManager] Invalid level index {_currentLevelIndex}");
+            Debug.LogError($"[GameManager] Invalid level index {levelNumber}");
             return;
         }
 
@@ -110,10 +137,12 @@ public class GameManager : MonoBehaviour
 
         // 2) Instantiate the new level at origin
         _currentLevelInstance = Instantiate(
-            _levelPrefabs[_currentLevelIndex],
+           levelManager.levels[levelNumber].levelPrefab,
             Vector3.zero,
             Quaternion.identity
         );
+
+        InitializeLevelBridgeSettings();
 
         BridgeWalker walker = _currentLevelInstance.GetComponentInChildren<BridgeWalker>();
         if (walker == null)
@@ -151,11 +180,20 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[GameManager] Level {_currentLevelIndex + 1} has no LevelEndTrigger. It will never end.");
+            Debug.LogWarning($"[GameManager] Level {levelNumber + 1} has no LevelEndTrigger. It will never end.");
         }
 
-        Debug.Log($"[GameManager] Spawned Level #{_currentLevelIndex + 1}.");
+        Debug.Log($"[GameManager] Spawned Level #{levelNumber + 1}.");
         UpdateLevelLabel();
+    }
+
+    /// <summary>
+    /// Initializes the break force and torque threshold for each level.
+    /// </summary>
+    private void InitializeLevelBridgeSettings()
+    {
+        pinchDetection.breakForceThreshold = levelManager.levels[_currentLevelIndex].breakForceThreshold;
+        pinchDetection.breakTorqueThreshold = levelManager.levels[_currentLevelIndex].breakTorqueThreshold;
     }
 
     /// <summary>
@@ -177,11 +215,35 @@ public class GameManager : MonoBehaviour
         _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Next Level";
 
         // If this was the last level, change button text accordingly:
-        if (_currentLevelIndex == _levelPrefabs.Count - 1)
+        if (_currentLevelIndex == levelManager.levels.Count - 1)
         {
             _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Finish";
             _state = GameState.AllFinished;
         }
+
+        SaveLevelData();
+    }
+
+    /// <summary>
+    /// Saves the current level's data, including advancing to the next level and updating its unlocked state.
+    /// </summary>
+    private void SaveLevelData()
+    {
+        // Increment the current level index to move to the next level
+        _currentLevelIndex++;
+
+        if (_currentLevelIndex < levelManager.levels.Count)
+        {
+            // Save the current level index to PlayerPrefs so the player can resume from the same level
+            SaveCurrentLevel();
+
+            // Unlock the level at the new index (set the level's isUnlocked state to true)
+            levelManager.levels[_currentLevelIndex].isUnlocked = true;
+
+            // Save the unlocked state of the level to PlayerPrefs so it persists across sessions
+            SaveLevelState(_currentLevelIndex, true);
+        }
+
     }
 
     /// <summary>
@@ -193,12 +255,10 @@ public class GameManager : MonoBehaviour
         if (_youWinPanel != null)
             _youWinPanel.SetActive(false);
 
-        // Move to the next index
-        _currentLevelIndex++;
-        if (_currentLevelIndex < _levelPrefabs.Count)
+        if (_currentLevelIndex < levelManager.levels.Count)
         {
             // Spawn and immediately go to PLAYING
-            SpawnCurrentLevel();
+            SpawnCurrentLevel(_currentLevelIndex);
             _state = GameState.Playing;
 
             // Disable the button while playing
@@ -212,6 +272,28 @@ public class GameManager : MonoBehaviour
             _startOrNextButton.SetActive(false);
             _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "All Done!";
         }
+    }
+
+    /// <summary>
+    /// Save the player current level
+    /// </summary>
+    private void SaveCurrentLevel()
+    {
+        PlayerPrefs.SetInt("CurrentLevel", _currentLevelIndex);
+        PlayerPrefs.Save();
+        Debug.Log(_currentLevelIndex + " has been saved");
+    }
+
+    /// <summary>
+    /// Save the unlocked state of the current level to PlayerPrefs.
+    /// </summary>
+    private void SaveLevelState(int level, bool isUnlocked)
+    {
+        int levelIndex = level + 1;
+        string key = "Level_" + levelIndex.ToString(); // This could be something like "Level_1", "Level_2", etc.
+        PlayerPrefs.SetInt(key, isUnlocked ? 1 : 0); // Save the unlocked state (1 = unlocked, 0 = locked)
+        PlayerPrefs.Save();
+        Debug.Log(key + " has been unlocked");
     }
 
     /// <summary>
