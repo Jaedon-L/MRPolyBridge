@@ -314,6 +314,10 @@ public static class BridgeGraph
             }
         }
     }
+    public static bool HasBeamsAttached(int nodeId)
+    {
+        return _nodeToBeams.ContainsKey(nodeId) && _nodeToBeams[nodeId].Count > 0;
+    }
 
     /// <summary>
     /// Utility to fetch a beam GameObject from its instance ID.
@@ -361,7 +365,7 @@ public static class BridgeGraph
         }
 
     }
-        /// <summary>
+    /// <summary>
     /// Empties out all dictionaries so that no old references remain.
     /// </summary>
     public static void ClearAll()
