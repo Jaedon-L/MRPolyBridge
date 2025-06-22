@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Drag your level scriptableObject here in order: Level 1, Level 2, …")]
     [SerializeField] private LevelManager levelManager;
     [SerializeField] private HandPinchDetection pinchDetection;
+    [SerializeField] private SpawnPointSelector spawnPointSelector;
 
     [Header("CAR & TARGET")]
     [Tooltip("The only 'car' GameObject or tag you use. We check collisions with the finish zone.")]
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshPro winningText;
 
 
+    private Vector3 spawnPosition;
     private int _currentLevelIndex = 0;        // zero‐based index into _levelPrefabs
     private GameObject _currentLevelInstance;  // the spawned "level" root GameObject
 
@@ -122,6 +124,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void SpawnCurrentLevel(int levelNumber)
     {
+        spawnPosition = spawnPointSelector.GetLockedSpawnPoint();
         //if (_currentLevelIndex < 0 || _currentLevelIndex >= _levelPrefabs.Count)
         if (levelNumber < 0 || levelNumber >= levelManager.levels.Count)
         {
@@ -138,7 +141,7 @@ public class GameManager : MonoBehaviour
         // 2) Instantiate the new level at origin
         _currentLevelInstance = Instantiate(
            levelManager.levels[levelNumber].levelPrefab,
-            Vector3.zero,
+            spawnPosition,
             Quaternion.identity
         );
 
@@ -192,8 +195,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitializeLevelBridgeSettings()
     {
-        pinchDetection.breakForceThreshold = levelManager.levels[_currentLevelIndex].breakForceThreshold;
-        pinchDetection.breakTorqueThreshold = levelManager.levels[_currentLevelIndex].breakTorqueThreshold;
+        pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
+        pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
     }
 
     /// <summary>

@@ -15,5 +15,5 @@ MonoBehaviour:
   levelName: Level 4
   levelPrefab: {fileID: 8670892056882968229, guid: 9414aa451a763494da06ec264ed70551, type: 3}
   isUnlocked: 0
-  breakForceThreshold: 9
-  breakTorqueThreshold: 5
+  supportBonusForce: 3
+  supportBonusTorque: 2

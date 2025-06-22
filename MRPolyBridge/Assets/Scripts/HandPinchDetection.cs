@@ -23,12 +23,12 @@ public class HandPinchDetection : MonoBehaviour
     [SerializeField] private OVRHand rightHand;
 
     [Header("Bridge Settings")]
-    public float breakForceThreshold = 15f;
-    public float breakTorqueThreshold = 8f;
+    [SerializeField] private float breakForceThreshold = 15f;
+    [SerializeField] private float breakTorqueThreshold = 8f;
 
     [Header("Support Settings")]
-    [SerializeField] private float supportBonusForce = 2f;
-    [SerializeField] private float supportBonusTorque = 1f;
+    public float supportBonusForce = 2f;
+    public float supportBonusTorque = 1f;
 
     [Header("Snap Settings")]
     [Tooltip("Size of each grid cell. Nodes will land on the nearest multiple of this in X, Y, and Z.")]

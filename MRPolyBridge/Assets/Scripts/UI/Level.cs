@@ -8,7 +8,7 @@ public class Level : ScriptableObject
     public GameObject levelPrefab;
     public bool isUnlocked = false;
 
-    [Header("Bridge Settings")]
-    public float breakForceThreshold = 15f;
-    public float breakTorqueThreshold = 8f;
+    [Header("Support Settings")]
+    public float supportBonusForce = 3f;
+    public float supportBonusTorque = 2f;
 }
