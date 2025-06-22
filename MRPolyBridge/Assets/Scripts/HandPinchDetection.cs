@@ -34,6 +34,7 @@ public class HandPinchDetection : MonoBehaviour
     [Tooltip("Size of each grid cell. Nodes will land on the nearest multiple of this in X, Y, and Z.")]
     [SerializeField] private float gridSize = 0.5f;
 
+
     // Internal state / mode flags:
     private bool buildingModeEnabled = false;  // “Build” on/off
     private bool supportModeEnabled = false;   // whether right pinch places support
@@ -48,6 +49,9 @@ public class HandPinchDetection : MonoBehaviour
     private GameObject currentPreviewLine;
     private LineRenderer currentLineRenderer;
 
+    [Header("Build UI Settings")]
+    [SerializeField] private GameObject insufficientBudgetPopupPrefab;
+    [SerializeField] private Transform uiCanvasTransform; // parent for popups
     void Update()
     {
         if (!buildingModeEnabled) return;
@@ -147,12 +151,23 @@ public class HandPinchDetection : MonoBehaviour
         Vector3 spawnPos = new Vector3(snappedX, snappedY, snappedZ);
         Debug.Log($"[SpawnSnapNode] raw tip={raw:F3} → snapped to {spawnPos:F3}");
 
+        float cost = BudgetManager.Instance.NodeCost;
+        if (!BudgetManager.Instance.TrySpend(cost))
+        {
+            // Insufficient budget: display feedback (e.g., floating text or UI panel).
+            ShowInsufficientBudgetFeedback();
+            return;
+        }
         GameObject go = Instantiate(snapInteractablePrefab, spawnPos, Quaternion.identity);
         var si = go.GetComponentInChildren<SnapInteractable>();
         si.InjectRigidbody(snapAreaRb);
         go.tag = "BridgeNode";
-        Debug.Log($"[SpawnSnapNode] Spawned node at {spawnPos}");
-        
+        // Attach BuildCost:
+        var buildCost = go.AddComponent<BuildCost>();
+        buildCost.Initialize(BuildCost.ObjectType.Node, cost);
+
+        Debug.Log($"[SpawnSnapNode] Spawned node at {spawnPos} (cost {cost})");
+
     }
 
     #endregion
@@ -283,12 +298,33 @@ public class HandPinchDetection : MonoBehaviour
         Debug.Log("[PlaceSupportBeam] Spawning support beam.");
         SpawnBeam(A, B, supportBeamPrefab, isSupport: true);
     }
-
+    private void ShowInsufficientBudgetFeedback()
+    {
+        if (insufficientBudgetPopupPrefab != null && uiCanvasTransform != null)
+        {
+            var popup = Instantiate(insufficientBudgetPopupPrefab, uiCanvasTransform);
+            // Optionally auto-destroy after a delay:
+            Destroy(popup, 2f);
+        }
+        // Additionally, play a sound or haptic feedback.
+    }
     private void SpawnBeam(Transform A, Transform B, GameObject beamPrefab, bool isSupport)
     {
         Vector3 pA = A.position;
         Vector3 pB = B.position;
         float dist = Vector3.Distance(pA, pB);
+        // Compute cost:
+        float cost;
+        if (isSupport)
+            cost = BudgetManager.Instance.SupportCostPerUnitLength * dist;
+        else
+            cost = BudgetManager.Instance.BeamCostPerUnitLength * dist;
+
+        if (!BudgetManager.Instance.TrySpend(cost))
+        {
+            ShowInsufficientBudgetFeedback();
+            return;
+        }
         Vector3 mid = (pA + pB) * 0.5f;
 
         Vector3 rawDir = (pB - pA).normalized;
@@ -314,6 +350,10 @@ public class HandPinchDetection : MonoBehaviour
         beam.transform.localScale = new Vector3(dist,
                                                 beam.transform.localScale.y,
                                                 beam.transform.localScale.z);
+
+        // Add BuildCost component to beam:
+        var buildCost = beam.AddComponent<BuildCost>();
+        buildCost.Initialize(isSupport ? BuildCost.ObjectType.SupportBeam : BuildCost.ObjectType.MainBeam, cost);
 
         Rigidbody beamRb = beam.GetComponent<Rigidbody>();
         if (beamRb == null)
@@ -492,13 +532,18 @@ public class BridgeBeamManualBreak : MonoBehaviour
         foreach (var hinge in hinges)
         {
             // Read the **current** breakForce & breakTorque directly from the hinge:
-            currentForceThreshold  = hinge.breakForce;
+            currentForceThreshold = hinge.breakForce;
             float currentTorqueThreshold = hinge.breakTorque;
             Vector3 reaction = hinge.currentForce;
             float mag = reaction.magnitude;
             if (mag > currentForceThreshold)
             {
                 Debug.Log($"[BridgeBeamManualBreak] Breaking hinge on {gameObject.name} at force {mag:F1} N (threshold {currentForceThreshold})");
+                var buildCost = GetComponent<BuildCost>();
+                if (buildCost != null)
+                {
+                    buildCost.broken = true;
+                }
                 BridgeGraph.UnregisterBeam(gameObject);
                 Destroy(gameObject);
                 return;
