@@ -4,9 +4,11 @@ using Oculus.Interaction; // For Grabbable
 [RequireComponent(typeof(Collider))]
 public class GarbageCan : MonoBehaviour
 {
+    public LayerMask player; 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("UI")) return;
+        if (((1 << other.gameObject.layer) & player) != 0) return; 
 
         GameObject target = other.transform.root.gameObject;
         var grabbable = target.GetComponentInChildren<Grabbable>();
