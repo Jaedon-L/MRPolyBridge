@@ -110,12 +110,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharkPrefab: {fileID: 52628254036162145, guid: a36e90ff4b62d83408136b92ea1df812, type: 3}
-  numberOfSharks: 5
+  numberOfSharks: 4
   tankRadius: 0.07
-  sharkSpeed: 1
-  jumpInterval: 10
+  sharkSpeed: 2
+  jumpInterval: 7
   jumpArcInterval: 13
-  jumpHeight: 0.15
+  jumpHeight: 0.1
   jumpArcHeight: 0.2
   initialJumpPosition: {fileID: 4386558663144908086}
   jumpTargetPosition: {fileID: 8231983429036042676}

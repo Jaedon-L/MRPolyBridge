@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1584c120349148f187854f50cbc7ba51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainPrefab: {fileID: 0}
-  numberOfChains: 5
-  spawnRadius: 5
-  spawnHeight: 1
+  chainPrefab: {fileID: 7818412081148880910, guid: 0f8fad2130e1b5044aa3ee5585eedee9, type: 3}
+  numberOfChains: 2
+  spawnRadius: 0.005
+  spawnHeight: 0.2

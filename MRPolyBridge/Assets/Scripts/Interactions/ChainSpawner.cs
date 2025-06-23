@@ -14,12 +14,13 @@ namespace Interactions
 
         private void Start()
         {
+            spawnPositions = new List<Vector3>();
             for (int i = 0; i < numberOfChains; i++)
             {
-                Vector3 spawnPosition = Random.insideUnitSphere * spawnRadius;
-                spawnPosition.y = spawnHeight;
-                spawnPosition += spawnPosition;
+                var spawnPosition = Random.insideUnitSphere * spawnRadius + transform.position +
+                                    Vector3.up * spawnHeight;
                 Instantiate(chainPrefab, spawnPosition, Quaternion.identity);
+                spawnPositions.Add(spawnPosition);
             }
         }
 

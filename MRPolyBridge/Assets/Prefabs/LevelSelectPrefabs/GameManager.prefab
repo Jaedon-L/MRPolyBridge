@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1996728604509816117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 801467470832309034}
+  - component: {fileID: 3174241129426403620}
+  - component: {fileID: 3934316116583177875}
+  - component: {fileID: 440036978417454794}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &801467470832309034
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996728604509816117}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3174241129426403620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996728604509816117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3107495e7b9361f4184d3dfdc96aed0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelManager: {fileID: 3934316116583177875}
+  pinchDetection: {fileID: 0}
+  spawnPointSelector: {fileID: 0}
+  _carTag: Car
+  _levelEndTriggerPrefab: {fileID: 0}
+  _startOrNextButton: {fileID: 0}
+  _levelLabel: {fileID: 0}
+  _youWinPanel: {fileID: 0}
+  winningText: {fileID: 0}
+  _upControl: {fileID: 0}
+  _downControl: {fileID: 0}
+  _leftControl: {fileID: 0}
+  _rightControl: {fileID: 0}
+--- !u!114 &3934316116583177875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996728604509816117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab64ba1213d74d24b91804dd7cbedd92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levels:
+  - {fileID: 11400000, guid: 06e4987b583f32a4287efbf1576d9ada, type: 2}
+  - {fileID: 11400000, guid: 2d9c8c8c3150d0f4995f9c78189af588, type: 2}
+  - {fileID: 11400000, guid: 896e065dee7963544a51a848057817bf, type: 2}
+  - {fileID: 11400000, guid: 4fc9ea7706e985f41a0a43bbf190b4df, type: 2}
+--- !u!114 &440036978417454794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996728604509816117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82fb299da2869c459e53f7dec1bff43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelButtons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  gameManager: {fileID: 3174241129426403620}
+  levelManager: {fileID: 3934316116583177875}

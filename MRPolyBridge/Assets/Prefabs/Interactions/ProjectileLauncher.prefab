@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 5230971429152286031, guid: e5c80b2a95696ae48a93a08586a75ec2, type: 3}
   target: {fileID: 0}
-  timeToTarget: 4
+  timeToTarget: 3
   maxHeight: 0.5
   explosionRadius: 0.01
   explosionForce: 100
