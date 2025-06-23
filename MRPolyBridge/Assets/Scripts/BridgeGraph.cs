@@ -82,18 +82,20 @@ public static class BridgeGraph
             hinge.breakForce = _config.baseBreakForce;
             hinge.breakTorque = _config.baseBreakTorque;
         }
-        // ——————————————————————————————————————————————————————————
-        // (2) ***NEW:*** If either endpoint node is already supported, immediately apply its bonus:
-        if (_supportedNodeIds.Contains(idA))
-        {
-            ApplySupportBonusFromNode(idA);
-        }
-        if (_supportedNodeIds.Contains(idB))
-        {
-            ApplySupportBonusFromNode(idB);
-        }
-        // Now this new beam’s hinges will get the same +supportBonus that older beams did.
-        // ——————————————————————————————————————————————————————————
+        // // ——————————————————————————————————————————————————————————
+        // // (2) ***NEW:*** If either endpoint node is already supported, immediately apply its bonus:
+        // if (_supportedNodeIds.Contains(idA))
+        // {
+        //     ApplySupportBonusFromNode(idA);
+        // }
+        // if (_supportedNodeIds.Contains(idB))
+        // {
+        //     ApplySupportBonusFromNode(idB);
+        // }
+
+        // // Now this new beam’s hinges will get the same +supportBonus that older beams did.
+        // // ——————————————————————————————————————————————————————————
+        ApplyExistingSupportBonusesToNewBeam(beamId);
     }
 
     /// <summary>
@@ -300,6 +302,7 @@ public static class BridgeGraph
                     hinge.breakForce -= _config.supportBonusForce;
                     hinge.breakTorque -= _config.supportBonusTorque;
                 }
+                appliedSet.Remove(startNodeId);
                 // If _after_ removing, this beam has NO more supporting nodes, restore its hinge limits:
                 if (appliedSet.Count == 0)
                 {
@@ -310,8 +313,91 @@ public static class BridgeGraph
                 Debug.Log($"[BridgeGraph]   −Removed bonus from node {startNodeId} on beam '{beamGO.name}' (ID {beamId}): −{_config.supportBonusForce}/{_config.supportBonusTorque}");
 
                 // Clear the record:
-                appliedSet.Remove(startNodeId);
+
             }
+        }
+    }
+    /// <summary>
+    /// After a new beam is registered, look at the connected cluster reachable from its endpoints,
+    /// and for every supported node in that cluster, apply its bonus to this beam if not yet applied.
+    /// </summary>
+    private static void ApplyExistingSupportBonusesToNewBeam(int beamId)
+    {
+        // 1) Find the two endpoints of this beam
+        if (!_beamToNodes.TryGetValue(beamId, out var endpoints))
+            return;
+        int startA = endpoints.nodeAId;
+        int startB = endpoints.nodeBId;
+
+        // 2) BFS from both endpoints to collect all reachable nodes in the cluster
+        var visitedNodes = new HashSet<int>();
+        var visitedBeams = new HashSet<int>();
+        var queue = new Queue<int>();
+
+        // Enqueue both endpoints
+        visitedNodes.Add(startA);
+        queue.Enqueue(startA);
+        if (startB != startA)
+        {
+            visitedNodes.Add(startB);
+            queue.Enqueue(startB);
+        }
+
+        while (queue.Count > 0)
+        {
+            int nodeId = queue.Dequeue();
+            if (!_nodeToBeams.TryGetValue(nodeId, out var beams))
+                continue;
+            foreach (var beamGO in beams)
+            {
+                int bId = beamGO.GetInstanceID();
+                if (visitedBeams.Add(bId))
+                {
+                    // enqueue the other node endpoint(s)
+                    if (_beamToNodes.TryGetValue(bId, out var nodePair))
+                    {
+                        if (!visitedNodes.Contains(nodePair.nodeAId))
+                        {
+                            visitedNodes.Add(nodePair.nodeAId);
+                            queue.Enqueue(nodePair.nodeAId);
+                        }
+                        if (!visitedNodes.Contains(nodePair.nodeBId))
+                        {
+                            visitedNodes.Add(nodePair.nodeBId);
+                            queue.Enqueue(nodePair.nodeBId);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3) For each supported node in this cluster, apply its bonus to our new beam if not yet done
+        if (!_beamBonusApplied.TryGetValue(beamId, out var appliedSet))
+            return;
+
+        GameObject beamGOObj = FindBeamByID(beamId);
+        if (beamGOObj == null) return;
+
+        var hinges = beamGOObj.GetComponents<HingeJoint>();
+        foreach (int nodeId in visitedNodes)
+        {
+            if (_supportedNodeIds.Contains(nodeId) && !appliedSet.Contains(nodeId))
+            {
+                // apply bonus
+                foreach (var hinge in hinges)
+                {
+                    hinge.breakForce += _config.supportBonusForce;
+                    hinge.breakTorque += _config.supportBonusTorque;
+                }
+                appliedSet.Add(nodeId);
+                Debug.Log($"[BridgeGraph]   +Applied existing support bonus from node {nodeId} to new beam '{beamGOObj.name}' (ID {beamId})");
+            }
+        }
+
+        // 4) If at least one support applied, lock hinges
+        if (appliedSet.Count > 0)
+        {
+            LockBeamHinges(beamId);
         }
     }
     public static bool HasBeamsAttached(int nodeId)

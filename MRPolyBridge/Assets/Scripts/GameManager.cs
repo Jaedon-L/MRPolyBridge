@@ -49,6 +49,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _rightControl;
     // ────────────────────────────────────────────────────────────────────
 
+    [Header("Temporary level budget variables")]
+    [SerializeField] private float level1Budget = 100f;
+    [SerializeField] private float level2Budget = 150f;
     private void Awake()
     {
         // Hook up our Start/Next button:
@@ -65,7 +68,7 @@ public class GameManager : MonoBehaviour
         UpdateLevelLabel();
 
         // Saving the current level locked state for level 1
-        if(_currentLevelIndex == 0)
+        if (_currentLevelIndex == 0)
             SaveLevelState(_currentLevelIndex, true);
     }
 
@@ -135,7 +138,7 @@ public class GameManager : MonoBehaviour
         // 1) Destroy any leftover level from before:
         if (_currentLevelInstance != null)
             Destroy(_currentLevelInstance);
-            ClearAllBridgePieces();
+        ClearAllBridgePieces();
 
 
         // 2) Instantiate the new level at origin
@@ -146,6 +149,12 @@ public class GameManager : MonoBehaviour
         );
 
         InitializeLevelBridgeSettings();
+
+
+        // Reset budget based on level
+        float budgetToUse = GetBudgetForLevel(levelNumber);
+        BudgetManager.Instance.ResetBudget(budgetToUse);
+
 
         BridgeWalker walker = _currentLevelInstance.GetComponentInChildren<BridgeWalker>();
         if (walker == null)
@@ -197,6 +206,17 @@ public class GameManager : MonoBehaviour
     {
         pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
         pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
+    }
+    //Temporary Budget settings
+    private float GetBudgetForLevel(int idx)
+    {
+        switch (idx)
+        {
+            case 1: return level1Budget;
+            case 2: return level2Budget;
+                // ...
+        }
+        return level1Budget;
     }
 
     /// <summary>
