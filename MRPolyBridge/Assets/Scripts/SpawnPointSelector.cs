@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnPointSelector : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class SpawnPointSelector : MonoBehaviour
     [SerializeField] private float rayLength = 10f;
     [SerializeField] private OVRHand rightHand;             // Reference to the right hand (drag in inspector)
     [SerializeField] private float pinchThreshold = 0.8f;   // How firm the pinch must be to trigger
+    [SerializeField] private Button spawnPointBtn;
 
 
     private Vector3 currentHitPoint;
@@ -20,7 +23,11 @@ public class SpawnPointSelector : MonoBehaviour
 
     void Start()
     {
+        spawnPointBtn.onClick.AddListener(ResetSpawnPoint);
+
         lineRenderer.positionCount = 2;
+        isLocked = true;
+        lineRenderer.gameObject.SetActive(false);
 
         // Create indicator but hide initially
         if (boundaryIndicatorPrefab != null)
@@ -97,8 +104,7 @@ public class SpawnPointSelector : MonoBehaviour
     /// <summary>
     /// Allows the reset of the spawn point in case the user needs to change the spawn position while playing.
     /// </summary>
-    [ContextMenu("ResetSpawn")]
-    public void ResetSpawnPoint()
+    private void ResetSpawnPoint()
     {
         isLocked = false;
         lineRenderer.gameObject.SetActive(true);
