@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Oculus.Interaction;
 using UnityEngine;
 using TMPro;
+using Oculus.Interaction.HandGrab;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,6 +43,8 @@ public class GameManager : MonoBehaviour
     [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Right'")]
     [SerializeField] private GameObject _rightControl;
     // ────────────────────────────────────────────────────────────────────
+
+    [SerializeField] private VRJoystick joystickHandle;
 
     private void Awake()
     {
@@ -105,8 +108,9 @@ public class GameManager : MonoBehaviour
         // 1) Destroy any leftover level from before:
         if (_currentLevelInstance != null)
             Destroy(_currentLevelInstance);
-            ClearAllBridgePieces();
-
+        Debug.Log("Before Clear: Joystick exists? " + (GameObject.Find("JoystickController") != null));
+        ClearAllBridgePieces();
+        Debug.Log("After Clear: Joystick exists? " + (GameObject.Find("JoystickController") != null));
 
         // 2) Instantiate the new level at origin
         _currentLevelInstance = Instantiate(
@@ -156,6 +160,26 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"[GameManager] Spawned Level #{_currentLevelIndex + 1}.");
         UpdateLevelLabel();
+        EnableJoystick();
+    }
+    void EnableJoystick()
+    {
+        if (joystickHandle != null)
+        {
+            joystickHandle.RefreshBridgeWalkerReference();
+            Debug.Log("[GameManager] Refreshed joystick with new BridgeWalker reference.");
+
+            var interactable = joystickHandle.GetComponent<HandGrabInteractable>();
+            var collider = joystickHandle.GetComponent<Collider>();
+
+            if (interactable != null)
+                interactable.enabled = true;
+
+            if (collider != null)
+                collider.enabled = true;
+
+            joystickHandle.gameObject.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -224,6 +248,15 @@ public class GameManager : MonoBehaviour
             _levelLabel.text = $"Level: {_currentLevelIndex + 1}";
         }
     }
+
+    public void EnableUIControls(bool enable)
+    {
+        _upControl.SetActive(enable);
+        _downControl.SetActive(enable);
+        _leftControl.SetActive(enable);
+        _rightControl.SetActive(enable);
+    }
+
     /// <summary>
     /// Given a BridgeWalker on the newly spawned car, hook up each of the four
     /// InteractableUnityEventWrapper controls to call MoveUp/MoveDown/MoveLeft/MoveRight.

@@ -25,6 +25,7 @@ TagManager:
   - BridgeNode
   - UI
   - Car
+  - Obstacle
   layers:
   - Default
   - TransparentFX

@@ -21,8 +21,6 @@ public class BridgeWalker : MonoBehaviour
     private bool _movingBack = false;
     private bool _movingLeft = false;
     private bool _movingRight = false;
-    private Vector3 targetHeading = Vector3.forward;
-    private float headingChangeSpeed = 5f;
 
     void Awake()
     {
@@ -42,28 +40,14 @@ public class BridgeWalker : MonoBehaviour
             // Normalize diagonal movement so it doesn't go faster
             Vector3 normalizedDir = _moveDir.normalized;
 
-            // Update target heading gradually:
-            // Interpolate between current heading and new input direction
-            targetHeading = Vector3.Slerp(targetHeading, normalizedDir, headingChangeSpeed * Time.fixedDeltaTime);
-            targetHeading.y = 0; // keep flat on ground
-
             // MovePosition ensures smooth interpolation under physics
             Vector3 newPos = _rb.position + _moveDir * (moveSpeed * Time.fixedDeltaTime);
             _rb.MovePosition(newPos);
 
-            // Rotate to face direction (Y axis only)
-            if (targetHeading.sqrMagnitude > 0.01f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(targetHeading, Vector3.up);
-                Quaternion smoothedRotation = Quaternion.Slerp(_rb.rotation, targetRotation, headingChangeSpeed * Time.fixedDeltaTime);
-                _rb.MoveRotation(smoothedRotation);
-            }
-
             if (debugMovement)
             {
-                Debug.Log($"[BridgeWalker] Moving: {normalizedDir} at speed {moveSpeed}");
-                Debug.Log($"[BridgeWalker] Moving from {_rb.position} to {newPos}");
-                Debug.Log($"[BridgeWalker] Moving: {normalizedDir}, Target Heading: {targetHeading}");
+                Debug.Log($"Moving: {normalizedDir} at speed {moveSpeed}");
+                Debug.Log($"Moving from {_rb.position} to {newPos}");
             }
         }
     }
