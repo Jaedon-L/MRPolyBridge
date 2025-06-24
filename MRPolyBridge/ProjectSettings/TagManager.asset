@@ -25,6 +25,8 @@ TagManager:
   - BridgeNode
   - UI
   - Car
+  - Support
+  - Floor
   layers:
   - Default
   - TransparentFX
@@ -35,6 +37,8 @@ TagManager:
   - Wood
   - Snap
   - Support
+  - Plane
+  - 
   - Floor
   - Player
   - 
