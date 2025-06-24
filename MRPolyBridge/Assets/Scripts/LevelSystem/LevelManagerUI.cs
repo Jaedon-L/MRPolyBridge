@@ -8,15 +8,10 @@ public class LevelManagerUI : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     [SerializeField] private LevelManager levelManager;
 
-
-    private void Awake()
-    {
-        LoadLevelStates();
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        LoadLevelStates();
         InitializeButtonState();
     }
 
@@ -50,9 +45,8 @@ public class LevelManagerUI : MonoBehaviour
     {
         for (int i = 0; i < levelButtons.Count; i++)
         {
-            levelButtons[i].onClick.AddListener(() => gameManager.SpawnCurrentLevel(i));
-
-            // set the interactable state to the unlocked state of the corresponding level.
+            int index = i;
+            levelButtons[i].onClick.AddListener(() => gameManager.SpawnCurrentLevel(index));
             levelButtons[i].interactable = levelManager.levels[i].isUnlocked;
         }
     }
