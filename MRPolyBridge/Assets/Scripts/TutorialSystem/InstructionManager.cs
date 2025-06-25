@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 [RequireComponent(typeof(AudioSource))]
 public class InstructionManager : MonoBehaviour
@@ -110,7 +111,7 @@ public class InstructionManager : MonoBehaviour
             item.isActive = true;
         }
 
-        EventManager.Instance.InstructionChange(instructionDatas[(int)currentInstructionID].procedureData);
+        EventManager.Instance.InstructionChange(instructionDatas[(int)currentInstructionID].procedureData, instructionDatas[(int)currentInstructionID].clip);
 
         instructionDatas[(int)currentInstructionID].procedureEvent?.Invoke();
         PlayInstructionAudio();
@@ -208,6 +209,7 @@ public class InstructionData
     public string procedureData;
     [Space]
     public UnityEvent procedureEvent;
+    public VideoClip clip;
     public bool canByPass;
 
     public bool AllConditionsFinished()
