@@ -19384,286 +19384,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2016890587}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1176153680
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1176153686}
-  - component: {fileID: 1176153685}
-  - component: {fileID: 1176153684}
-  - component: {fileID: 1176153683}
-  - component: {fileID: 1176153682}
-  - component: {fileID: 1176153681}
-  m_Layer: 5
-  m_Name: TutorialInstructionMenu
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1176153681
+--- !u!114 &1176153683 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+  m_PrefabInstance: {fileID: 7159839157757032220}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176153680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26bce3e7964bf7c459404920a9a5a1f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1176153682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176153680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 754f10677008dd846b15310e61f7a238, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  instructionText: {fileID: 4751137963597550255}
---- !u!114 &1176153683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176153680}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02e0a09cd46ff45459ea138f0c59a0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instructionDatas:
-  - instructionsID: 0
-    conditions: []
-    procedureData: To set your spawn point, point your right hand toward the floor
-      and pinch your fingers. This will define where the level objects will appear.
-      You can always reset your spawn point from the settings menu
-    procedureEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1610965197}
-          m_TargetAssemblyTypeName: SpawnPointSelector, Assembly-CSharp
-          m_MethodName: ResetSpawnPoint
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    canByPass: 1
-  - instructionsID: 1
-    conditions: []
-    procedureData: Brilliant!! Now lets go over the things you need to know to get
-      started.
-    procedureEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1944757503}
-          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-          m_MethodName: SpawnCurrentLevel
-          m_Mode: 3
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    canByPass: 1
-  - instructionsID: 2
-    conditions: []
-    procedureData: Your Build Remote lets you toggle between Build Mode and Edit
-      Mode. Use Build Mode to place platforms and support beams. Switch to Edit Mode
-      when you need to remove nodes, delete existing supports or bridges.
-    procedureEvent:
-      m_PersistentCalls:
-        m_Calls: []
-    canByPass: 1
-  - instructionsID: 3
-    conditions: []
-    procedureData: In Build Mode, make a pinch getsure with your left hand to spawn
-      a node. Then, make a pinch gesture with your right hand to connect nodes, forming
-      bridges or support beams.
-    procedureEvent:
-      m_PersistentCalls:
-        m_Calls: []
-    canByPass: 1
-  - instructionsID: 4
-    conditions: []
-    procedureData: Add more support beams to strengthen your bridge, weak structures
-      may collapse when the car tries to cross. Build smart to avoid failure!
-    procedureEvent:
-      m_PersistentCalls:
-        m_Calls: []
-    canByPass: 1
-  - instructionsID: 5
-    conditions: []
-    procedureData: "Keep an eye on your budget, once you exceed it, you won\u2019t
-      be able to place any more supports. Plan efficiently to stay within limits
-      and complete the level."
-    procedureEvent:
-      m_PersistentCalls:
-        m_Calls: []
-    canByPass: 1
-  currentInstructionID: 0
-  endInstructionID: 6
-  taskCompletedClip: {fileID: 8300000, guid: 92b80444bd9099d458a799a2f18766c0, type: 3}
-  congratulationAudio: {fileID: 8300000, guid: 099db410b8ff40347bc964c65f23e3c5, type: 3}
-  nextButton: {fileID: 4559820930912837223}
-  allSelectedObject: []
---- !u!82 &1176153684
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176153680}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!223 &1176153685
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176153680}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!224 &1176153686
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176153680}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1.2, y: 1.25}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1181313947
 GameObject:
   m_ObjectHideFlags: 0
@@ -36519,6 +36250,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1176153683}
+    - target: {fileID: 3330109665729046118, guid: 9842868814e00e345bca0cbbcd4e9efb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StartInstruction
+      objectReference: {fileID: 0}
     - target: {fileID: 4068921062064392909, guid: 9842868814e00e345bca0cbbcd4e9efb, type: 3}
       propertyPath: m_Name
       value: PlayerMenu
@@ -37168,6 +36903,79 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73728b76a21490940b1e112e6498fa1a, type: 3}
+--- !u!1001 &7159839157757032220
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3597474957212971160, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: instructionText
+      value: 
+      objectReference: {fileID: 4751137963597550255}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662144387627806587, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5462504328291285812, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_Name
+      value: TutorialInstructionMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: nextButton
+      value: 
+      objectReference: {fileID: 4559820930912837223}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: instructionDatas.Array.data[0].procedureEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1610965197}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: instructionDatas.Array.data[1].procedureEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1944757503}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -37189,7 +36997,7 @@ SceneRoots:
   - {fileID: 1397193859411913754}
   - {fileID: 6668544025443602140}
   - {fileID: 2278894343197988393}
-  - {fileID: 1176153686}
   - {fileID: 376909860}
   - {fileID: 1367546399061718997}
   - {fileID: 847649746}
+  - {fileID: 7159839157757032220}

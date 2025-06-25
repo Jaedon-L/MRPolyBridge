@@ -1,31 +1,33 @@
 using Meta.WitAi.TTS.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
+/// <summary>
+/// Singleton manager for handling step-by-step instructional flow for the game tutorial,
+/// including audio prompts, video clips, and condition checking.
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class InstructionManager : MonoBehaviour
 {
     public static InstructionManager Instance { get; private set; }
 
-    public List<InstructionData> instructionDatas = new List<InstructionData>();
-    public EnumClass.InstructionsID currentInstructionID = EnumClass.InstructionsID.Step1;
-    public EnumClass.InstructionsID endInstructionID;
+    // Serialized fields
+    [SerializeField] private List<InstructionData> instructionDatas = new List<InstructionData>();
+    [SerializeField] private EnumClass.InstructionsID currentInstructionID = EnumClass.InstructionsID.Step1;
+    [SerializeField] private EnumClass.InstructionsID endInstructionID;
+    [SerializeField] private AudioClip taskCompletedClip, congratulationAudio;
+    [SerializeField] private Button nextButton;
+
     private AudioSource audioSource;
-    public AudioClip taskCompletedClip, congratulationAudio;
-    public Button nextButton;
     private bool isCompleted = false;
 
-    [HideInInspector]
-    public List<GameObject> allSelectedObject = new List<GameObject>();
-
+    /// <summary>
+    /// Unity Awake callback. Initializes singleton instance and sets up instruction IDs.
+    /// </summary>
     private void Awake()
     {
         if (Instance == null)
@@ -40,32 +42,48 @@ public class InstructionManager : MonoBehaviour
         SetUpBaseConditionStructure();
     }
 
-    void Start()
+    /// <summary>
+    /// Unity Start callback. Registers listeners and initializes the audio source.
+    /// </summary>
+    private void Start()
     {
         audioSource = GetComponent<AudioSource>();
         if (instructionDatas.Count == 0) return;
-        EventManager.Instance.StartExperiment += InitializeCoroutine;
+
+        EventManager.Instance.StartTutorial += InitializeCoroutine;
         EventManager.Instance.OnChangeInstruction += ActivateInstruction;
         nextButton.onClick.AddListener(() => ActivateInstruction());
     }
 
+    /// <summary>
+    /// Unity OnDisable callback. Cleans up TTS and event subscriptions.
+    /// </summary>
     private void OnDisable()
     {
         EventManager.Instance.OnChangeInstruction -= ActivateInstruction;
         CleanUpTTS();
     }
 
+    /// <summary>
+    /// Unity OnDestroy callback. Cleans up TTS and event subscriptions.
+    /// </summary>
     private void OnDestroy()
     {
         EventManager.Instance.OnChangeInstruction -= ActivateInstruction;
         CleanUpTTS();
     }
 
-    public void StartExperiment()
+    /// <summary>
+    /// Method to trigger the beginning of the tutorial or experiment via the event manager.
+    /// </summary>
+    public void StartInstruction()
     {
-        EventManager.Instance.StartExperiment?.Invoke();
+        EventManager.Instance.StartTutorial?.Invoke();
     }
 
+    /// <summary>
+    /// Sets up the base structure by assigning each instruction a unique ID based on its index.
+    /// </summary>
     private void SetUpBaseConditionStructure()
     {
         for (int i = 0; i < instructionDatas.Count; i++)
@@ -74,6 +92,10 @@ public class InstructionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds a new condition to its corresponding instruction step.
+    /// </summary>
+    /// <param name="condition">The condition to add.</param>
     public void AddConditions(Conditions condition)
     {
         for (int i = 0; i < instructionDatas.Count; i++)
@@ -93,17 +115,26 @@ public class InstructionManager : MonoBehaviour
         }
     }
 
-    void InitializeCoroutine()
+    /// <summary>
+    /// Begins coroutine to delay instruction initialization slightly after tutorial start.
+    /// </summary>
+    private void InitializeCoroutine()
     {
         StartCoroutine(DelayInstruction());
     }
 
-    IEnumerator DelayInstruction()
+    /// <summary>
+    /// Coroutine that waits before calling the main instruction initialization.
+    /// </summary>
+    private IEnumerator DelayInstruction()
     {
         yield return new WaitForSeconds(0.1f);
         InitializeInstruction();
     }
 
+    /// <summary>
+    /// Activates the current instruction: conditions, UI update, events, and audio.
+    /// </summary>
     public void InitializeInstruction()
     {
         foreach (var item in instructionDatas[(int)currentInstructionID].conditions)
@@ -111,12 +142,18 @@ public class InstructionManager : MonoBehaviour
             item.isActive = true;
         }
 
-        EventManager.Instance.InstructionChange(instructionDatas[(int)currentInstructionID].procedureData, instructionDatas[(int)currentInstructionID].clip);
+        EventManager.Instance.InstructionChange(
+            instructionDatas[(int)currentInstructionID].procedureData,
+            instructionDatas[(int)currentInstructionID].clip
+        );
 
         instructionDatas[(int)currentInstructionID].procedureEvent?.Invoke();
         PlayInstructionAudio();
     }
 
+    /// <summary>
+    /// Plays the audio clip indicating a task has been completed.
+    /// </summary>
     private void PlayTaskCompletedAudio()
     {
         if (audioSource != null && taskCompletedClip != null)
@@ -126,6 +163,9 @@ public class InstructionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Proceeds to the next instruction if current conditions are met.
+    /// </summary>
     [ContextMenu("Start")]
     public void ActivateInstruction()
     {
@@ -134,29 +174,35 @@ public class InstructionManager : MonoBehaviour
             return;
 
         currentInstructionID++;
-        Debug.Log("new instruction"); 
-        
+        Debug.Log("new instruction");
+
         if (currentInstructionID == endInstructionID)
         {
             EventManager.Instance.InstructionEnd();
             Debug.Log("finished");
-
             return;
         }
 
         InitializeInstruction();
     }
 
+    /// <summary>
+    /// Uses TTS to speak out the current instruction text.
+    /// </summary>
     private void PlayInstructionAudio()
     {
         TTSSpeaker speaker = GameObject.FindFirstObjectByType<TTSSpeaker>();
         string text = instructionDatas[(int)currentInstructionID].procedureData;
-        if(text != "" && !string.IsNullOrWhiteSpace(text))
+
+        if (!string.IsNullOrWhiteSpace(text))
         {
             speaker.Speak(text);
         }
     }
 
+    /// <summary>
+    /// Stops any active TTS speech.
+    /// </summary>
     private void CleanUpTTS()
     {
         TTSSpeaker speaker = GameObject.FindFirstObjectByType<TTSSpeaker>();
@@ -164,19 +210,16 @@ public class InstructionManager : MonoBehaviour
             speaker.Stop();
     }
 
+    /// <summary>
+    /// Unity Update callback. Handles button visibility and final congratulation logic.
+    /// </summary>
     private void Update()
     {
         if (isCompleted) return;
+
         if (currentInstructionID != endInstructionID)
         {
-            if (instructionDatas[(int)currentInstructionID].canByPass)
-            {
-                ActivateNextButton(true);
-            }
-            else
-            {
-                ActivateNextButton(false);
-            }
+            ActivateNextButton(instructionDatas[(int)currentInstructionID].canByPass);
         }
         else
         {
@@ -185,11 +228,18 @@ public class InstructionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enables or disables the "Next" button based on the given value.
+    /// </summary>
+    /// <param name="value">True to show the button, false to hide it.</param>
     private void ActivateNextButton(bool value)
     {
         nextButton.gameObject.SetActive(value);
     }
 
+    /// <summary>
+    /// Plays the congratulatory audio once all instructions are complete.
+    /// </summary>
     private void PlayCongratulationAudio()
     {
         if (audioSource != null && congratulationAudio != null)
@@ -200,6 +250,9 @@ public class InstructionManager : MonoBehaviour
     }
 }
 
+/// <summary>
+/// Represents the data and logic tied to a single instructional step in the tutorial.
+/// </summary>
 [System.Serializable]
 public class InstructionData
 {
@@ -212,6 +265,10 @@ public class InstructionData
     public VideoClip clip;
     public bool canByPass;
 
+    /// <summary>
+    /// Checks if all conditions for this instruction step have been marked as finished.
+    /// </summary>
+    /// <returns>True if all conditions are finished; otherwise, false.</returns>
     public bool AllConditionsFinished()
     {
         int count = 0;
@@ -222,9 +279,6 @@ public class InstructionData
                 count++;
         }
 
-        if (count == conditions.Count)
-            return true;
-        else
-            return false;
+        return count == conditions.Count;
     }
 }

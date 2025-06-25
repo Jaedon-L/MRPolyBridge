@@ -1,0 +1,298 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5462504328291285812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3662144387627806587}
+  - component: {fileID: 5943571819300622900}
+  - component: {fileID: 7817389478479273356}
+  - component: {fileID: 5044243898485570088}
+  - component: {fileID: 3597474957212971160}
+  - component: {fileID: 8875872500599598176}
+  m_Layer: 5
+  m_Name: TutorialInstructionMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3662144387627806587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462504328291285812}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!82 &5943571819300622900
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462504328291285812}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7817389478479273356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462504328291285812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e0a09cd46ff45459ea138f0c59a0ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instructionDatas:
+  - instructionsID: 0
+    conditions: []
+    procedureData: To set your spawn point, point your right hand toward the floor
+      and pinch your fingers. This will define where the level objects will appear.
+      You can always reset your spawn point from the settings menu
+    procedureEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: SpawnPointSelector, Assembly-CSharp
+          m_MethodName: ResetSpawnPoint
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    clip: {fileID: 0}
+    canByPass: 1
+  - instructionsID: 1
+    conditions: []
+    procedureData: Brilliant!! Now lets go over the things you need to know to get
+      started.
+    procedureEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+          m_MethodName: SpawnCurrentLevel
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    clip: {fileID: 0}
+    canByPass: 1
+  - instructionsID: 2
+    conditions: []
+    procedureData: Your Build Remote lets you toggle between Build Mode and Edit
+      Mode. Use Build Mode to place platforms and support beams. Switch to Edit Mode
+      when you need to remove nodes, delete existing supports or bridges.
+    procedureEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    clip: {fileID: 0}
+    canByPass: 1
+  - instructionsID: 3
+    conditions: []
+    procedureData: In Build Mode, make a pinch gesture with your left hand to spawn
+      a node. Then, make a pinch gesture with your right hand to connect nodes forming
+      bridges or support beams.
+    procedureEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    clip: {fileID: 0}
+    canByPass: 1
+  - instructionsID: 4
+    conditions: []
+    procedureData: Add more support beams to strengthen your bridge, weak structures
+      may collapse when the car tries to cross. Build smart to avoid failure!
+    procedureEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    clip: {fileID: 0}
+    canByPass: 1
+  - instructionsID: 5
+    conditions: []
+    procedureData: "Keep an eye on your budget, once you exceed it, you won\u2019t
+      be able to place any more supports. Plan efficiently to stay within limits
+      and complete the level."
+    procedureEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    clip: {fileID: 0}
+    canByPass: 1
+  currentInstructionID: 0
+  endInstructionID: 6
+  taskCompletedClip: {fileID: 8300000, guid: 92b80444bd9099d458a799a2f18766c0, type: 3}
+  congratulationAudio: {fileID: 8300000, guid: 099db410b8ff40347bc964c65f23e3c5, type: 3}
+  nextButton: {fileID: 0}
+--- !u!328 &5044243898485570088
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462504328291285812}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 0}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 2
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 1
+  m_TargetAudioSources:
+  - {fileID: 5943571819300622900}
+  m_DirectAudioVolumes:
+  - 1
+  m_Url: 
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
+--- !u!114 &3597474957212971160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462504328291285812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 754f10677008dd846b15310e61f7a238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instructionEndMessage: Tutorial complete! Head to the Main Menu to begin your adventure.
+  instructionText: {fileID: 0}
+  homePageBtn: {fileID: 0}
+--- !u!114 &8875872500599598176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462504328291285812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26bce3e7964bf7c459404920a9a5a1f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 public class SpawnPointSelector : MonoBehaviour
 {
-    [SerializeField] private Transform controllerTransform;            // XR controller or hand
-    [SerializeField] private LineRenderer lineRenderer;                // Visual ray
-    [SerializeField] private LayerMask floorLayer;                     // Set to "Floor" layer
-    [SerializeField] private GameObject boundaryIndicatorPrefab;       // Visual marker prefab
+    [SerializeField] private Transform controllerTransform; // XR controller or hand
+    [SerializeField] private LineRenderer lineRenderer; // Visual ray
+    [SerializeField] private LayerMask floorLayer; // Set to "Floor" layer
+    [SerializeField] private GameObject boundaryIndicatorPrefab; // Visual marker prefab
     [SerializeField] private float rayLength = 10f;
-    [SerializeField] private OVRHand rightHand;             // Reference to the right hand (drag in inspector)
-    [SerializeField] private float pinchThreshold = 0.8f;   // How firm the pinch must be to trigger
+    [SerializeField] private OVRHand rightHand; // Reference to the right hand
+    [SerializeField] private float pinchThreshold = 0.8f; // How firm the pinch must be to trigger
     [SerializeField] private Button spawnPointBtn;
 
 
     private Vector3 currentHitPoint;
     private GameObject boundaryIndicatorInstance;
-    private bool pinchLocked = false;     // Prevents re-triggering during continuous pinch
+    private bool pinchLocked = false; // Prevents re-triggering during continuous pinch
     private bool hasValidHit = false;
     private bool isLocked = false;
 
