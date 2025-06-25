@@ -38,6 +38,10 @@ public class VRJoystick : MonoBehaviour
     // Debug counters
     private int debugCounter = 0;
 
+    [Header("Car Controller Reference")]
+    [Tooltip("Drag the GameObject with PrometeoCarController here.")]
+    [SerializeField] private PrometeoCarController carController;
+
     void Start()
     {
         Initialize();
@@ -143,6 +147,7 @@ public class VRJoystick : MonoBehaviour
             ReturnToCenter();
         }
 
+        ApplyJoystickToCar(); 
         // Always update visual feedback
         UpdateVisualFeedback();
 
@@ -164,6 +169,26 @@ public class VRJoystick : MonoBehaviour
         {
             Debug.DrawRay(joystickHandle.position, currentInput.normalized, Color.green);
         }
+    }
+    
+    private void ApplyJoystickToCar()
+    {
+        if (carController == null)
+            return;
+
+        // Always use VR input mode when this joystick is present
+        carController.useVRInput = true;
+
+        // Map currentInput.x to steering, currentInput.z to throttle:
+        // Note: PrometeoCarController expects vrInput.x = steer (-1 left, +1 right)
+        //                          vrInput.y = throttle (+1 forward, -1 reverse)
+        carController.vrInput = new Vector2(currentInput.x, currentInput.z);
+
+        // Optionally: handle handbrake. If you have another mechanism (e.g., a button pressed on controller),
+        // you might set:
+        // carController.handbrakePressed = someCondition;
+        // For now, if no dedicated handbrake: leave false:
+        carController.handbrakePressed = false;
     }
 
     private bool IsBeingGrabbed()
