@@ -9,11 +9,12 @@ public class BudgetManager : MonoBehaviour
 
     [Header("Initial Budget Settings")]
     [Tooltip("Starting budget for the level.")]
-    [SerializeField] private float initialBudget = 100f;
+    // [SerializeField] private float initialBudget = 100f;
 
     [Header("Cost Settings")]
-    [Tooltip("Cost for placing each node.")]
+    // [Tooltip("Cost for placing each node.")]
     [SerializeField] private float nodeCost = 5f;
+
     [Tooltip("Cost per unit length for main beams.")]
     [SerializeField] private float beamCostPerUnitLength = 2f;
     [Tooltip("Cost per unit length for support beams.")]

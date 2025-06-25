@@ -25,7 +25,8 @@ public class InstructionMenu : MonoBehaviour
     {
         EventManager.Instance.OnInstructionChange += SetInstruction;
         EventManager.Instance.OnInstructionEnd += DisplayCompletedMessage;
-
+        if (homePageBtn == null) return;
+        homePageBtn.gameObject.SetActive(false);
         player = GetComponent<VideoPlayer>();
     }
 

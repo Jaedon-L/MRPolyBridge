@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _youWinPanel;
     [SerializeField] private TextMeshPro winningText;
 
+    private float budgetToUse; 
+
 
     private Vector3 spawnPosition;
     private int _currentLevelIndex = 0;        // zero‐based index into _levelPrefabs
@@ -149,7 +151,7 @@ public class GameManager : MonoBehaviour
 
 
         // Reset budget based on level
-        float budgetToUse = GetBudgetForLevel(levelNumber);
+        budgetToUse = GetBudgetForLevel(levelNumber);
         BudgetManager.Instance.ResetBudget(budgetToUse);
 
 
@@ -209,7 +211,7 @@ public class GameManager : MonoBehaviour
         pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
         pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
     }
-    //Temporary Budget settings
+    //Budget settings
     private float GetBudgetForLevel(int idx)
     {
         return levelManager.levels[idx].budget;
@@ -429,6 +431,9 @@ public class GameManager : MonoBehaviour
         // Optionally, clear any internal graph data right away:
         // (If you want to be sure BridgeGraph has no leftover references.)
         BridgeGraph.ClearAll();   // ← see note below
+                // Reset budget based on level
+        // float budgetToUse = GetBudgetForLevel(levelNumber);
+        BudgetManager.Instance.ResetBudget(budgetToUse);
 
         Debug.Log("[GameManager] Cleared all nodes, beams, and support‐beams.");
     }

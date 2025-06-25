@@ -157,8 +157,8 @@ MonoBehaviour:
         m_Calls: []
   PrependedText: 
   AppendedText: 
-  _ttsService: {fileID: 0}
-  presetVoiceID: SKULLY
+  _ttsService: {fileID: 6573338420338568719}
+  presetVoiceID: RUBIE
   customWitVoiceSettings:
     SettingsId: 
     PrependedText: 
@@ -167,6 +167,7 @@ MonoBehaviour:
     style: default
     speed: 100
     pitch: 100
+  verboseLogging: 0
 --- !u!114 &2000371813597577971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,6 +227,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b3124b830442d45b9f357ff99b152f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  verboseLogging: 0
+  _audioSystem: {fileID: 0}
+  _runtimeCacheHandler: {fileID: 0}
+  _diskCacheHandler: {fileID: 0}
   _events:
     OnClipCreated:
       m_PersistentCalls:
@@ -285,11 +290,13 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   RequestSettings:
-    configuration: {fileID: 11400000, guid: cf747878b0776f44884853a7fe2ea4c8, type: 2}
+    _configuration: {fileID: 11400000, guid: cf747878b0776f44884853a7fe2ea4c8, type: 2}
     audioType: 0
     audioStream: 1
     useEvents: 1
-    useWebSockets: 0
+    audioStreamPreloadCount: 5
+    audioReadyDuration: 1.5
+    audioMaxDuration: 15
   _presetVoiceSettings:
   - SettingsId: SKULLY
     PrependedText: 
@@ -443,25 +450,6 @@ MonoBehaviour:
     DiskCacheLocation: 0
     StreamFromDisk: 0
     StreamBufferLength: 5
-  _events:
-    OnStreamBegin:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStreamReady:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStreamClipUpdate:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStreamComplete:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStreamCancel:
-      m_PersistentCalls:
-        m_Calls: []
-    OnStreamError:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!1 &7378199739290685932
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +493,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

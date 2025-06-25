@@ -132,7 +132,7 @@ public class PrometeoCarController : MonoBehaviour
   float localVelocityZ;
   float localVelocityX;
   bool deceleratingCar;
-  bool touchControlsSetup = false;
+  // bool touchControlsSetup = false;
   /*
   The following variables are used to store information about sideways friction of the wheels (such as
   extremumSlip,extremumValue, asymptoteSlip, asymptoteValue and stiffness). We change this values to
@@ -381,50 +381,9 @@ public class PrometeoCarController : MonoBehaviour
   }
   public void HandleVRInput(Vector2 input)
   {
-    // Debug.Log($"[PrometeoCarController] HandleVRInput called: {input}");
-    // float x = input.x;
-    // float y = input.y;
-
-    // if (y > 0.1f)
-    // {
-    //   CancelInvoke("DecelerateCar");
-    //   deceleratingCar = false;
-    //   GoForward();
-    // }
-    // else if (y < -0.1f)
-    // {
-    //   CancelInvoke("DecelerateCar");
-    //   deceleratingCar = false;
-    //   GoReverse();
-    // }
-    // else
-    // {
-    //   ThrottleOff();
-    // }
-
-    // if (x > 0.1f)
-    // {
-    //   TurnRight();
-    // }
-    // else if (x < -0.1f)
-    // {
-    //   TurnLeft();
-    // }
-    // else
-    // {
-    //   ResetSteeringAngle();
-    // }
     vrInput = input;
     useVRInput = true;
   }
-
-  //ADD BELOW IN VR JOYSTICK SCRIPT
-  //if (targetCar.TryGetComponent<PrometeoCarController>(out var carController))
-  //{
-  //    carController.useVRInput = true;
-  //    carController.vrInput = new Vector2(joystickDirection.x, joystickDirection.z);
-  //    carController.handbrakePressed = isGripButtonHeld; // optional
-  //}
 
   // UI button hooks
   public void OnPressForward()
@@ -483,19 +442,6 @@ public class PrometeoCarController : MonoBehaviour
     localVelocityX = transform.InverseTransformDirection(carRigidbody.linearVelocity).x;
     // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
     localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
-
-    //CAR PHYSICS
-
-    /*
-    The next part is regarding to the car controller. First, it checks if the user wants to use touch controls (for
-    mobile devices) or analog input controls (WASD + Space).
-
-    The following methods are called whenever a certain key is pressed. For example, in the first 'if' we call the
-    method GoForward() if the user has pressed W.
-
-    In this part of the code we specify what the car needs to do if the user presses W (throttle), S (reverse),
-    A (turn left), D (turn right) or Space bar (handbrake).
-    */
 
     if (useVRInput)
     {
