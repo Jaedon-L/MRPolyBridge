@@ -104,7 +104,7 @@ public class SpawnPointSelector : MonoBehaviour
     /// <summary>
     /// Allows the reset of the spawn point in case the user needs to change the spawn position while playing.
     /// </summary>
-    private void ResetSpawnPoint()
+    public void ResetSpawnPoint()
     {
         isLocked = false;
         lineRenderer.gameObject.SetActive(true);
