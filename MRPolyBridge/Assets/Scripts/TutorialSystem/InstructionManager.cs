@@ -60,7 +60,6 @@ public class InstructionManager : MonoBehaviour
         CleanUpTTS();
     }
 
-    [ContextMenu("Start")]
     public void StartExperiment()
     {
         EventManager.Instance.StartExperiment?.Invoke();
@@ -112,6 +111,8 @@ public class InstructionManager : MonoBehaviour
         }
 
         EventManager.Instance.InstructionChange(instructionDatas[(int)currentInstructionID].procedureData);
+
+        instructionDatas[(int)currentInstructionID].procedureEvent?.Invoke();
         PlayInstructionAudio();
     }
 
@@ -123,7 +124,8 @@ public class InstructionManager : MonoBehaviour
             audioSource.Play();
         }
     }
-    
+
+    [ContextMenu("Start")]
     public void ActivateInstruction()
     {
         PlayTaskCompletedAudio();
@@ -141,12 +143,7 @@ public class InstructionManager : MonoBehaviour
             return;
         }
 
-        foreach (var item in instructionDatas[(int)currentInstructionID].conditions)
-        {
-            item.isActive = true;
-        }
-        EventManager.Instance.InstructionChange(instructionDatas[(int)currentInstructionID].procedureData);
-        PlayInstructionAudio();
+        InitializeInstruction();
     }
 
     private void PlayInstructionAudio()
@@ -168,7 +165,8 @@ public class InstructionManager : MonoBehaviour
 
     private void Update()
     {
-        if (currentInstructionID != endInstructionID && !isCompleted)
+        if (isCompleted) return;
+        if (currentInstructionID != endInstructionID)
         {
             if (instructionDatas[(int)currentInstructionID].canByPass)
             {
@@ -208,6 +206,8 @@ public class InstructionData
     public List<Conditions> conditions = new List<Conditions>();
     [TextArea]
     public string procedureData;
+    [Space]
+    public UnityEvent procedureEvent;
     public bool canByPass;
 
     public bool AllConditionsFinished()
