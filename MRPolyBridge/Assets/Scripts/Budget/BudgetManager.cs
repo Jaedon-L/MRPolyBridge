@@ -24,7 +24,7 @@ public class BudgetManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float refundMultiplier = 1f;
 
-    private float currentBudget;
+    public float currentBudget;
 
     /// <summary>
     /// Fired whenever the budget changes; float parameter is new budget.
@@ -43,11 +43,6 @@ public class BudgetManager : MonoBehaviour
         Instance = this;
         // Persist if desired between scenes:
         // DontDestroyOnLoad(gameObject);
-    }
-
-    private void Start()
-    {
-        ResetBudget(initialBudget);
     }
 
     /// <summary>

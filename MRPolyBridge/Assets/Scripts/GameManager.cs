@@ -49,9 +49,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _rightControl;
     // ────────────────────────────────────────────────────────────────────
 
-    [Header("Temporary level budget variables")]
-    [SerializeField] private float level1Budget = 100f;
-    [SerializeField] private float level2Budget = 150f;
     private void Awake()
     {
         // Hook up our Start/Next button:
@@ -204,19 +201,18 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitializeLevelBridgeSettings()
     {
+        //Set the values for the break threshold.
+        pinchDetection.breakForceThreshold = levelManager.levels[_currentLevelIndex].breakForceThreshold;
+        pinchDetection.breakTorqueThreshold = levelManager.levels[_currentLevelIndex].breakTorqueThreshold;
+
+        //Set the values for the support
         pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
         pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
     }
     //Temporary Budget settings
     private float GetBudgetForLevel(int idx)
     {
-        switch (idx)
-        {
-            case 1: return level1Budget;
-            case 2: return level2Budget;
-                // ...
-        }
-        return level1Budget;
+        return levelManager.levels[idx].budget;
     }
 
     /// <summary>

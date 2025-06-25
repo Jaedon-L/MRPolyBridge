@@ -11,7 +11,6 @@ public class SpawnPointSelector : MonoBehaviour
     [SerializeField] private GameObject boundaryIndicatorPrefab; // Visual marker prefab
     [SerializeField] private float rayLength = 10f;
     [SerializeField] private OVRHand rightHand; // Reference to the right hand
-    [SerializeField] private float pinchThreshold = 0.8f; // How firm the pinch must be to trigger
     [SerializeField] private Button spawnPointBtn;
 
 
@@ -75,7 +74,7 @@ public class SpawnPointSelector : MonoBehaviour
     /// </summary>
     private void SelectSpawnPoint()
     {
-        if (rightHand.GetFingerPinchStrength(OVRHand.HandFinger.Index) > pinchThreshold)
+        if (rightHand.GetFingerIsPinching(OVRHand.HandFinger.Index))
         {
             if (!pinchLocked)
             {
