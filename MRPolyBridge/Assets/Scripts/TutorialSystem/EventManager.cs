@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class EventManager : MonoBehaviour
 {
@@ -33,11 +34,11 @@ public class EventManager : MonoBehaviour
         OnInstructionEnd?.Invoke();
     }
 
-    public event Action<string> OnInstructionChange;
+    public event Action<string, VideoClip> OnInstructionChange;
 
-    public void InstructionChange(string newInstruction)
+    public void InstructionChange(string newInstruction, VideoClip clip)
     {
-        OnInstructionChange?.Invoke(newInstruction);
+        OnInstructionChange?.Invoke(newInstruction, clip);
     }
 
     public Action StartExperiment;
