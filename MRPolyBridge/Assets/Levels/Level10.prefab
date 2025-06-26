@@ -3367,6 +3367,7 @@ GameObject:
   - component: {fileID: 1177330459458127010}
   - component: {fileID: 2880452484268083975}
   - component: {fileID: 8333250286075853}
+  - component: {fileID: 8712613658519444739}
   m_Layer: 0
   m_Name: japanes island
   m_TagString: Untagged
@@ -3442,6 +3443,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8712613658519444739
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953831596453764632}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 25.058567, y: 4.6169763, z: 32.351334}
+  m_Center: {x: 0.0000014127744, y: 2.308488, z: -0.0000000012576449}
 --- !u!1 &2112687335497428868
 GameObject:
   m_ObjectHideFlags: 0
@@ -3602,6 +3624,7 @@ GameObject:
   - component: {fileID: 2154808761438586505}
   - component: {fileID: 4180356879859495491}
   - component: {fileID: 7353816917373684434}
+  - component: {fileID: 5179904118884968183}
   m_Layer: 6
   m_Name: land camping forest
   m_TagString: Untagged
@@ -3696,8 +3719,29 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 44.99505, y: 4.538164, z: 45.005554}
-  m_Center: {x: 0, y: 2.269082, z: 0.0000009536743}
+  m_Size: {x: 44.99505, y: 4.5381637, z: 26.078117}
+  m_Center: {x: 0.0000045317756, y: 2.269082, z: -9.46363}
+--- !u!65 &5179904118884968183
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2378850715462079382}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 45.000004, y: 4.488266, z: 11.016409}
+  m_Center: {x: -0.00002049316, y: 2.2441185, z: 16.99164}
 --- !u!1 &2462349838646676668
 GameObject:
   m_ObjectHideFlags: 0
@@ -3817,6 +3861,7 @@ GameObject:
   - component: {fileID: 2899778055217737239}
   - component: {fileID: 2274827239146578354}
   - component: {fileID: 4068219529709622648}
+  - component: {fileID: 4916051090241366253}
   m_Layer: 0
   m_Name: treasure Island
   m_TagString: Untagged
@@ -3892,6 +3937,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &4916051090241366253
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2555164329960387757}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4024815224324953287, guid: d42b995400193b14e9f5b1c8f9b002d9, type: 3}
 --- !u!1 &2717442979325044175
 GameObject:
   m_ObjectHideFlags: 0
@@ -7880,8 +7947,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 7.183877, y: 12.208406, z: 13.291557}
-  m_Center: {x: 0, y: 6.104203, z: 0}
+  m_Size: {x: 7.183877, y: 7.6220317, z: 13.291558}
+  m_Center: {x: 0.000000031388407, y: 3.8110178, z: -0.000000023591006}
 --- !u!1 &6080989995620868386
 GameObject:
   m_ObjectHideFlags: 0
