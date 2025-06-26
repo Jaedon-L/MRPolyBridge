@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 801467470832309034}
   - component: {fileID: 3174241129426403620}
   - component: {fileID: 3934316116583177875}
-  - component: {fileID: 440036978417454794}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -76,22 +75,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2d9c8c8c3150d0f4995f9c78189af588, type: 2}
   - {fileID: 11400000, guid: 896e065dee7963544a51a848057817bf, type: 2}
   - {fileID: 11400000, guid: 4fc9ea7706e985f41a0a43bbf190b4df, type: 2}
---- !u!114 &440036978417454794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1996728604509816117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b82fb299da2869c459e53f7dec1bff43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  levelButtons: []
   gameManager: {fileID: 3174241129426403620}
-  levelManager: {fileID: 3934316116583177875}
+  buttonPrefab: {fileID: 0}
+  buttonParent: {fileID: 0}

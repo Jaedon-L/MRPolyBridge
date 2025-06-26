@@ -28,6 +28,16 @@ public class LevelManagerEditor : Editor
     // Add a new level and save it as an asset
     private void AddNewLevel(LevelManager levelManager)
     {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            EditorUtility.DisplayDialog(
+                "Cannot Modify Levels in Play Mode",
+                "Adding or removing levels is disabled during Play Mode.\nPlease exit Play Mode first.",
+                "OK"
+            );
+            return;
+        }
+
         Level newLevel = ScriptableObject.CreateInstance<Level>();
         newLevel.levelName = "Level " + (levelManager.levels.Count + 1);
 
@@ -40,12 +50,25 @@ public class LevelManagerEditor : Editor
         levelManager.levels.Add(newLevel);
 
         // Add the newly created button for the level to the list
-        levelManager.AddLevelButton();
+        levelManager.AddButton();
+
+        //Ensure changes are saved to the LevelManager
+        EditorUtility.SetDirty(levelManager);
     }
 
     // Remove the last level and delete the asset
     private void RemoveLastLevel(LevelManager levelManager)
     {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            EditorUtility.DisplayDialog(
+                "Cannot Modify Levels in Play Mode",
+                "Adding or removing levels is disabled during Play Mode.\nPlease exit Play Mode first.",
+                "OK"
+            );
+            return;
+        }
+
         if (levelManager.levels.Count > 0)
         {
             // Get the path of the last level asset
@@ -59,7 +82,10 @@ public class LevelManagerEditor : Editor
             AssetDatabase.SaveAssets();
 
             // Delete the corresponding level button
-            levelManager.RemoveLevelButton();
+            levelManager.RemoveButton();
+
+            //Ensure changes are saved to the LevelManager
+            EditorUtility.SetDirty(levelManager);
         }
     }
 }
