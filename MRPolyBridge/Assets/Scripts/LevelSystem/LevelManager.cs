@@ -1,38 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof (LevelManagerUI))]
 public class LevelManager : MonoBehaviour
 {
     // A list that stores all the Level ScriptableObject instances
     public List<Level> levels = new List<Level>();
+    public LevelManagerUI levelManagerUI;
 
     /// <summary>
-    /// Adds a new level to the levels list.
-    /// This method creates a new Level ScriptableObject and assigns it a name based on the number of existing levels.
+    /// Create a button for the new level
     /// </summary>
-    public void AddLevel()
+    public void AddLevelButton()
     {
-        // Create a new instance of the Level ScriptableObject
-        Level newLevel = ScriptableObject.CreateInstance<Level>();
-
-        // Assign a name to the level based on the current count of levels
-        newLevel.levelName = "Level " + (levels.Count + 1);
-
-        // Add the newly created level to the levels list
-        levels.Add(newLevel);
+        levelManagerUI.AddButton();
     }
 
     /// <summary>
-    /// Removes the last level from the levels list.
-    /// This method will only remove a level if there are any levels in the list.
+    /// Deletes the corresponidng button of the level
     /// </summary>
-    public void RemoveLevel()
+    public void RemoveLevelButton()
     {
-        // Check if there are any levels in the list before attempting to remove one
-        if (levels.Count > 0)
-        {
-            // Remove the last level from the list (using the index of the last item)
-            levels.RemoveAt(levels.Count - 1);
-        }
+        levelManagerUI.RemoveButton();
     }
 }

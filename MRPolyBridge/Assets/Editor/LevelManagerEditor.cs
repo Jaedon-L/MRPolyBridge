@@ -38,6 +38,9 @@ public class LevelManagerEditor : Editor
 
         // Add the newly created level to the list
         levelManager.levels.Add(newLevel);
+
+        // Add the newly created button for the level to the list
+        levelManager.AddLevelButton();
     }
 
     // Remove the last level and delete the asset
@@ -54,6 +57,9 @@ public class LevelManagerEditor : Editor
             // Delete the level asset
             AssetDatabase.DeleteAsset(path);
             AssetDatabase.SaveAssets();
+
+            // Delete the corresponding level button
+            levelManager.RemoveLevelButton();
         }
     }
 }
