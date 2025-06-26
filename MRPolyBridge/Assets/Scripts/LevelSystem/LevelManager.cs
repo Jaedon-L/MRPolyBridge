@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     [SerializeField] private Button buttonPrefab;
     [SerializeField] private Transform buttonParent;
+    [SerializeField] private GameObject menu; 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -92,6 +93,10 @@ public class LevelManager : MonoBehaviour
             int index = i;
             levelButtons[i].onClick.AddListener(() => gameManager.SpawnCurrentLevel(index));
             levelButtons[i].interactable = levels[i].isUnlocked;
+            menu.SetActive(false); 
         }
+
     }
+
+
 }
