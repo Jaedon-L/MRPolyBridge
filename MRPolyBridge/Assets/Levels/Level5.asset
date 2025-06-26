@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Level5
   m_EditorClassIdentifier: 
   levelName: Level 5
-  levelPrefab: {fileID: 0}
-  budget: 0
+  levelPrefab: {fileID: 8670892056882968229, guid: 11292b8223f5deb45ac2f95ca6d78dcc, type: 3}
+  budget: 150
   isUnlocked: 0
-  breakForceThreshold: 15
-  breakTorqueThreshold: 8
-  supportBonusForce: 3
-  supportBonusTorque: 2
+  breakForceThreshold: 6000
+  breakTorqueThreshold: 5000
+  supportBonusForce: 1000
+  supportBonusTorque: 1000

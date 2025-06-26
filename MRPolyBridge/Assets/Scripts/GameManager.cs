@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _youWinPanel;
     [SerializeField] private TextMeshPro winningText;
 
-    private float budgetToUse; 
+    private float budgetToUse;
 
 
     private Vector3 spawnPosition;
@@ -38,18 +38,6 @@ public class GameManager : MonoBehaviour
 
     private enum GameState { WaitingToStart, Playing, LevelComplete, AllFinished }
     private GameState _state = GameState.WaitingToStart;
-    // ───── NEW: FOUR “DIRECTIONAL CONTROL” OBJECTS ───────────────────────
-    // Each of these must have an InteractableUnityEventWrapper component on it.
-    [Header("CAR CONTROLS")]
-    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Up'")]
-    [SerializeField] private GameObject _upControl;
-    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Down'")]
-    [SerializeField] private GameObject _downControl;
-    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Left'")]
-    [SerializeField] private GameObject _leftControl;
-    [Tooltip("Drag the GameObject that has InteractableUnityEventWrapper for 'Right'")]
-    [SerializeField] private GameObject _rightControl;
-    // ────────────────────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -146,25 +134,14 @@ public class GameManager : MonoBehaviour
             spawnPosition,
             Quaternion.identity
         );
-
-        InitializeLevelBridgeSettings();
+        _currentLevelIndex = levelNumber;
+        InitializeLevelBridgeSettings(levelNumber);
 
 
         // Reset budget based on level
         budgetToUse = GetBudgetForLevel(levelNumber);
         BudgetManager.Instance.ResetBudget(budgetToUse);
 
-
-        BridgeWalker walker = _currentLevelInstance.GetComponentInChildren<BridgeWalker>();
-        if (walker == null)
-        {
-            Debug.LogError("[GameManager] Could not find a BridgeWalker in the spawned level.");
-        }
-        else
-        {
-            // 2) Wire up all four controls to this walker instance:
-            WireUpCarControls(walker);
-        }
 
         // 3) Find (or create) the trigger that detects when the car finishes.
         //    We assume each level prefab either:
@@ -201,15 +178,40 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Initializes the break force and torque threshold for each level.
     /// </summary>
-    private void InitializeLevelBridgeSettings()
+    private void InitializeLevelBridgeSettings(int levelIndex)
     {
-        //Set the values for the break threshold.
-        pinchDetection.breakForceThreshold = levelManager.levels[_currentLevelIndex].breakForceThreshold;
-        pinchDetection.breakTorqueThreshold = levelManager.levels[_currentLevelIndex].breakTorqueThreshold;
+        var levelData = levelManager.levels[levelIndex];
+        // //Set the values for the break threshold.
+        // pinchDetection.breakForceThreshold = levelManager.levels[_currentLevelIndex].breakForceThreshold;
+        // pinchDetection.breakTorqueThreshold = levelManager.levels[_currentLevelIndex].breakTorqueThreshold;
 
-        //Set the values for the support
-        pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
-        pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
+        // //Set the values for the support
+        // pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
+        // pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
+        // BridgePhysicsConfig config = new()
+        // {
+        //     baseBreakForce = levelManager.levels[_currentLevelIndex].breakForceThreshold,
+        //     baseBreakTorque = levelManager.levels[_currentLevelIndex].breakTorqueThreshold,
+        //     supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce,
+        //     supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque
+        // };
+
+        // BridgeGraph.SetConfig(config);
+        pinchDetection.breakForceThreshold = levelData.breakForceThreshold;
+        pinchDetection.breakTorqueThreshold = levelData.breakTorqueThreshold;
+
+        pinchDetection.supportBonusForce = levelData.supportBonusForce;
+        pinchDetection.supportBonusTorque = levelData.supportBonusTorque;
+
+        BridgePhysicsConfig config = new()
+        {
+            baseBreakForce = levelData.breakForceThreshold,
+            baseBreakTorque = levelData.breakTorqueThreshold,
+            supportBonusForce = levelData.supportBonusForce,
+            supportBonusTorque = levelData.supportBonusTorque
+        };
+
+        BridgeGraph.SetConfig(config);
     }
     //Budget settings
     private float GetBudgetForLevel(int idx)
@@ -324,83 +326,10 @@ public class GameManager : MonoBehaviour
     {
         if (_levelLabel != null)
         {
-            _levelLabel.text = $"Level: {_currentLevelIndex + 1}";
+            _levelLabel.text = $"Current Level: {_currentLevelIndex + 1}";
         }
     }
-    /// <summary>
-    /// Given a BridgeWalker on the newly spawned car, hook up each of the four
-    /// InteractableUnityEventWrapper controls to call MoveUp/MoveDown/MoveLeft/MoveRight.
-    /// </summary>
-    private void WireUpCarControls(BridgeWalker walker)
-    {
-        // For each control we must:
-        //   a) Check if the assigned GameObject is not null.
-        //   b) Get its InteractableUnityEventWrapper component.
-        //   c) Register the appropriate method on BridgeWalker.
 
-        if (_upControl != null)
-        {
-            var wrapper = _upControl.GetComponent<InteractableUnityEventWrapper>();
-            if (wrapper != null)
-            {
-                // Clear any previous listeners, then add MoveUp
-                wrapper.WhenSelect.RemoveAllListeners();
-                wrapper.WhenSelect.AddListener(walker.StartMoveUp);
-                wrapper.WhenUnselect.AddListener(walker.StopMove);
-            }
-            else
-            {
-                Debug.LogWarning("[GameManager] _upControl has no InteractableUnityEventWrapper.");
-            }
-        }
-
-        if (_downControl != null)
-        {
-            var wrapper = _downControl.GetComponent<InteractableUnityEventWrapper>();
-            if (wrapper != null)
-            {
-                wrapper.WhenSelect.RemoveAllListeners();
-                wrapper.WhenSelect.AddListener(walker.StartMoveDown);
-                wrapper.WhenUnselect.AddListener(walker.StopMove);
-            }
-            else
-            {
-                Debug.LogWarning("[GameManager] _downControl has no InteractableUnityEventWrapper.");
-            }
-        }
-
-        if (_leftControl != null)
-        {
-            var wrapper = _leftControl.GetComponent<InteractableUnityEventWrapper>();
-            if (wrapper != null)
-            {
-                wrapper.WhenSelect.RemoveAllListeners();
-                wrapper.WhenSelect.AddListener(walker.StartMoveLeft);
-                wrapper.WhenUnselect.AddListener(walker.StopMove);
-            }
-            else
-            {
-                Debug.LogWarning("[GameManager] _leftControl has no InteractableUnityEventWrapper.");
-            }
-        }
-
-        if (_rightControl != null)
-        {
-            var wrapper = _rightControl.GetComponent<InteractableUnityEventWrapper>();
-            if (wrapper != null)
-            {
-                wrapper.WhenSelect.RemoveAllListeners();
-                wrapper.WhenSelect.AddListener(walker.StartMoveRight);
-                wrapper.WhenUnselect.AddListener(walker.StopMove);
-            }
-            else
-            {
-                Debug.LogWarning("[GameManager] _rightControl has no InteractableUnityEventWrapper.");
-            }
-        }
-
-        Debug.Log($"[GameManager] Wired up controls to BridgeWalker on {walker.gameObject.name}");
-    }
     /// <summary>
     /// Call this (for example, from a UI “Clear” button) to destroy every
     /// SnapInteractable node, hinge‐beam, and support‐beam in the scene.
@@ -431,8 +360,8 @@ public class GameManager : MonoBehaviour
         // Optionally, clear any internal graph data right away:
         // (If you want to be sure BridgeGraph has no leftover references.)
         BridgeGraph.ClearAll();   // ← see note below
-                // Reset budget based on level
-        // float budgetToUse = GetBudgetForLevel(levelNumber);
+                                  // Reset budget based on level
+                                  // float budgetToUse = GetBudgetForLevel(levelNumber);
         BudgetManager.Instance.ResetBudget(budgetToUse);
 
         Debug.Log("[GameManager] Cleared all nodes, beams, and support‐beams.");

@@ -15,8 +15,8 @@ MonoBehaviour:
   levelName: Level 2
   levelPrefab: {fileID: 1005410049076883139, guid: 1fe72a1ee2c21fd4da153490b69ab472, type: 3}
   budget: 50
-  isUnlocked: 1
-  breakForceThreshold: 15
-  breakTorqueThreshold: 8
-  supportBonusForce: 3
-  supportBonusTorque: 2
+  isUnlocked: 0
+  breakForceThreshold: 8000
+  breakTorqueThreshold: 6000
+  supportBonusForce: 2000
+  supportBonusTorque: 1000

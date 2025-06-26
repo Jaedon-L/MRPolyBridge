@@ -28,7 +28,15 @@ public static class BridgeGraph
         supportBonusForce = 2f,
         supportBonusTorque = 1f
     };
+    public static void SetConfig(BridgePhysicsConfig newConfig)
+    {
+        _config = newConfig;
+    }
 
+    public static BridgePhysicsConfig GetConfig()
+    {
+        return _config;
+    }
     public static BridgePhysicsConfig GetCurrentConfig() => _config;
 
     // For each node (by its instance ID), which hinge‐beam GameObjects are attached?

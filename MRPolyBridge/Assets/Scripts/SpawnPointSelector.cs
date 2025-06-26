@@ -53,10 +53,11 @@ public class SpawnPointSelector : MonoBehaviour
             if (((1 << hit.collider.gameObject.layer) & floorLayer) != 0)
             {
                 // Hit is on a valid "floor" layer
-                currentHitPoint = hit.point;
+                // currentHitPoint = hit.point;
+                currentHitPoint = new Vector3(hit.point.x, 0f, hit.point.z);
                 hasValidHit = true;
                 boundaryIndicatorInstance.SetActive(true);
-                boundaryIndicatorInstance.transform.position = hit.point;
+                boundaryIndicatorInstance.transform.position = currentHitPoint;
             }
             else
             {

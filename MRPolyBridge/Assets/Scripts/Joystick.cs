@@ -4,25 +4,20 @@ using Oculus.Interaction;
 public class Joystick : MonoBehaviour
 {
     [Header("Joystick Transforms")]
-    [Tooltip("Pivot transform around which the joystick handle tilts.")]
     [SerializeField] private Transform joystickPivot;
 
     [Header("Car Controller Reference")]
-    [Tooltip("Assign your PrometeoCarController here.")]
     [SerializeField] private PrometeoCarController carController;
 
     [Header("Tilt Settings")]
-    [Tooltip("Maximum tilt angle in degrees recognized for input.")]
-    [SerializeField] private float maxTiltAngle = 30f;
-    [Tooltip("Dead zone angle in degrees: small tilts within this range produce zero input.")]
-    [SerializeField] private float deadZoneAngle = 5f;
-    [Tooltip("Speed at which joystick returns upright when released.")]
-    [SerializeField] private float returnSpeed = 5f;
+    [SerializeField] private float maxTiltAngle    = 30f;
+    [SerializeField] private float deadZoneAngle   =  5f;
+    [SerializeField] private float returnSpeed     =  5f;
 
     [Header("Debug")]
     [SerializeField] private bool enableDebugLogs = false;
 
-    private bool isGrabbed = false;
+    private bool   isGrabbed     = false;
     private Vector2 joystickInput = Vector2.zero;
 
     void Awake()
@@ -33,35 +28,23 @@ public class Joystick : MonoBehaviour
             Debug.LogError("[Joystick] carController is not assigned!");
     }
 
-    /// <summary>
-    /// Hook this to your WhenSelect event.
-    /// </summary>
     public void OnGrabStarted()
     {
         isGrabbed = true;
-        if (enableDebugLogs)
-            Debug.Log("[Joystick] OnGrabStarted");
+        if (enableDebugLogs) Debug.Log("[Joystick] OnGrabStarted");
     }
 
-    /// <summary>
-    /// Hook this to your WhenUnselect event.
-    /// </summary>
     public void OnGrabEnded()
     {
         isGrabbed = false;
         joystickInput = Vector2.zero;
-        if (carController != null)
-            carController.HandleVRInput(Vector2.zero);
-        if (enableDebugLogs)
-            Debug.Log("[Joystick] OnGrabEnded");
+        carController?.HandleVRInput(Vector2.zero);
+        if (enableDebugLogs) Debug.Log("[Joystick] OnGrabEnded");
     }
 
     void Update()
     {
         if (joystickPivot == null) return;
-
-        if (enableDebugLogs)
-            Debug.Log("[Joystick] Update called; isGrabbed=" + isGrabbed);
 
         if (isGrabbed)
         {
@@ -69,7 +52,7 @@ public class Joystick : MonoBehaviour
         }
         else
         {
-            // Return to upright
+            // Smoothly return to upright when released
             if (joystickPivot.localRotation != Quaternion.identity)
             {
                 joystickPivot.localRotation = Quaternion.Slerp(
@@ -81,46 +64,58 @@ public class Joystick : MonoBehaviour
             joystickInput = Vector2.zero;
         }
 
-        // Send to car
+        // Send input to car
         if (carController != null)
         {
-            if (enableDebugLogs)
-                Debug.Log($"[Joystick] Applying to car: input=({joystickInput.x:F2},{joystickInput.y:F2})");
+            // if (enableDebugLogs)
+            //     Debug.Log($"[Joystick] Applying to car: input=({joystickInput.x:F2}, {joystickInput.y:F2})");
             carController.HandleVRInput(joystickInput);
         }
     }
 
+    void LateUpdate()
+    {
+        // Always clamp the pivot rotation, whether grabbed or not,
+        // to enforce the ±45° physical limit.
+        if (joystickPivot == null) return;
+
+        Vector3 euler = joystickPivot.localRotation.eulerAngles;
+        float angleX = (euler.x > 180f ? euler.x - 360f : euler.x);
+        float angleZ = (euler.z > 180f ? euler.z - 360f : euler.z);
+
+        angleX = Mathf.Clamp(angleX, -45f, 45f);
+        angleZ = Mathf.Clamp(angleZ, -45f, 45f);
+
+        joystickPivot.localRotation = Quaternion.Euler(angleX, 0f, angleZ);
+    }
+
     /// <summary>
-    /// Reads pivot.localRotation and maps to joystickInput.
-    /// Adjust mapping logic (signs/axes) based on your observed pivot Euler behaviour.
+    /// Converts the (now-clamped) pivot.localRotation into normalized joystick input.
     /// </summary>
-private void ReadPivotRotationAsInput()
-{
-    Vector3 euler = joystickPivot.localRotation.eulerAngles;
-    float angleX = euler.x > 180f ? euler.x - 360f : euler.x;
-    float angleZ = euler.z > 180f ? euler.z - 360f : euler.z;
+    private void ReadPivotRotationAsInput()
+    {
+        Vector3 euler = joystickPivot.localRotation.eulerAngles;
+        float angleX = (euler.x > 180f ? euler.x - 360f : euler.x);
+        float angleZ = (euler.z > 180f ? euler.z - 360f : euler.z);
 
-    if (enableDebugLogs)
-        Debug.Log($"[Joystick] Pivot signed Euler: X={angleX:F1}, Z={angleZ:F1}");
+        if (enableDebugLogs)
+            Debug.Log($"[Joystick] Pivot Euler: X={angleX:F1}, Z={angleZ:F1}");
 
-    float clampedX = Mathf.Clamp(angleX, -maxTiltAngle, maxTiltAngle);
-    float clampedZ = Mathf.Clamp(angleZ, -maxTiltAngle, maxTiltAngle);
+        // Further clamp to the maxTiltAngle for input mapping
+        float clampedX = Mathf.Clamp(angleX, -maxTiltAngle, maxTiltAngle);
+        float clampedZ = Mathf.Clamp(angleZ, -maxTiltAngle, maxTiltAngle);
 
-    float inputY = 0f;
-    float inputX = 0f;
+        float inputX = 0f, inputY = 0f;
 
-    // Forward/back remains as before:
-    if (Mathf.Abs(clampedZ) >= deadZoneAngle)
-        inputY = -clampedZ / maxTiltAngle;
+        if (Mathf.Abs(clampedZ) >= deadZoneAngle)
+            inputY = -clampedZ / maxTiltAngle;  // forward/back
 
-    // Reverse left/right: negate clampedX
-    if (Mathf.Abs(clampedX) >= deadZoneAngle)
-        inputX = -clampedX / maxTiltAngle;
+        if (Mathf.Abs(clampedX) >= deadZoneAngle)
+            inputX = -clampedX / maxTiltAngle;  // left/right
 
-    joystickInput = new Vector2(inputX, inputY);
+        joystickInput = new Vector2(inputX, inputY);
 
-    if (enableDebugLogs)
-        Debug.Log($"[Joystick] Mapped joystickInput=({inputX:F2},{inputY:F2})");
-}
-
+        if (enableDebugLogs)
+            Debug.Log($"[Joystick] Mapped Input: ({inputX:F2}, {inputY:F2})");
+    }
 }

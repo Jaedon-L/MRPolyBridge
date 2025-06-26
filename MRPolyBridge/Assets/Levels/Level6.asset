@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53dbca36bea2631418298e053454f3d9, type: 3}
-  m_Name: Level4
+  m_Name: Level6
   m_EditorClassIdentifier: 
-  levelName: Level 4
-  levelPrefab: {fileID: 8670892056882968229, guid: 9414aa451a763494da06ec264ed70551, type: 3}
-  budget: 100
+  levelName: Level 6
+  levelPrefab: {fileID: 8670892056882968229, guid: 4315528681f0a334f9eae5a552b0ccf5, type: 3}
+  budget: 200
   isUnlocked: 0
   breakForceThreshold: 6000
   breakTorqueThreshold: 5000
