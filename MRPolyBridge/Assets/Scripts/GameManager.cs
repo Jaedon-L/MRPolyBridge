@@ -181,22 +181,7 @@ public class GameManager : MonoBehaviour
     private void InitializeLevelBridgeSettings(int levelIndex)
     {
         var levelData = levelManager.levels[levelIndex];
-        // //Set the values for the break threshold.
-        // pinchDetection.breakForceThreshold = levelManager.levels[_currentLevelIndex].breakForceThreshold;
-        // pinchDetection.breakTorqueThreshold = levelManager.levels[_currentLevelIndex].breakTorqueThreshold;
 
-        // //Set the values for the support
-        // pinchDetection.supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce;
-        // pinchDetection.supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque;
-        // BridgePhysicsConfig config = new()
-        // {
-        //     baseBreakForce = levelManager.levels[_currentLevelIndex].breakForceThreshold,
-        //     baseBreakTorque = levelManager.levels[_currentLevelIndex].breakTorqueThreshold,
-        //     supportBonusForce = levelManager.levels[_currentLevelIndex].supportBonusForce,
-        //     supportBonusTorque = levelManager.levels[_currentLevelIndex].supportBonusTorque
-        // };
-
-        // BridgeGraph.SetConfig(config);
         pinchDetection.breakForceThreshold = levelData.breakForceThreshold;
         pinchDetection.breakTorqueThreshold = levelData.breakTorqueThreshold;
 
@@ -265,6 +250,9 @@ public class GameManager : MonoBehaviour
 
             // Save the unlocked state of the level to PlayerPrefs so it persists across sessions
             SaveLevelState(_currentLevelIndex, true);
+            // *** NEW: Immediately re‐load & re‐initialize your LevelManager UI ***
+            levelManager.LoadLevelStates();
+            levelManager.InitializeButtonState();
         }
 
     }
@@ -328,6 +316,16 @@ public class GameManager : MonoBehaviour
         {
             _levelLabel.text = $"Current Level: {_currentLevelIndex + 1}";
         }
+    }
+    [ContextMenu("Clear All Saves")]
+    private void ClearAllSaves()
+    {
+        PlayerPrefs.DeleteKey("CurrentLevel");
+        // Also delete your per‐level keys:
+        for (int i = 1; i <= levelManager.levels.Count; i++)
+            PlayerPrefs.DeleteKey($"Level_{i}");
+        PlayerPrefs.Save();
+        Debug.Log("All PlayerPrefs cleared.");
     }
 
     /// <summary>

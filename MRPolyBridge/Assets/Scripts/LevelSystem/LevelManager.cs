@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using Unity.XR.CoreUtils;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +20,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Transform buttonParent;
     [SerializeField] private GameObject menu;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         LoadLevelStates();
         InitializeButtonState();
@@ -63,7 +62,7 @@ public class LevelManager : MonoBehaviour
     /// <summary>
     /// Load the unlocked state for each level from PlayerPrefs.
     /// </summary>
-    private void LoadLevelStates()
+    public void LoadLevelStates()
     {
         for (int i = 0; i < levels.Count; i++)
         {
@@ -86,7 +85,7 @@ public class LevelManager : MonoBehaviour
     /// <summary>
     /// Initialize the level button state
     /// </summary>
-    private void InitializeButtonState()
+    public void InitializeButtonState()
     {
         for (int i = 0; i < levelButtons.Count; i++)
         {
