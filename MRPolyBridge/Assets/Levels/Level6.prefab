@@ -228,6 +228,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: treasure Island with environment
       objectReference: {fileID: 0}
+    - target: {fileID: 1739153130918889006, guid: 277229067b269ba46a0c9a7b1d685454, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2186233744854626602, guid: 277229067b269ba46a0c9a7b1d685454, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -307,6 +311,10 @@ PrefabInstance:
     - target: {fileID: 4916227004072198913, guid: 277229067b269ba46a0c9a7b1d685454, type: 3}
       propertyPath: m_LocalPosition.z
       value: 30.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5724676306622765499, guid: 277229067b269ba46a0c9a7b1d685454, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

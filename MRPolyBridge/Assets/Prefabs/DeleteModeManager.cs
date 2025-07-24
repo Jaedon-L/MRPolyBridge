@@ -6,6 +6,7 @@ public class DeleteModeManager : MonoBehaviour
 {
     [Tooltip("Assign a Garbage Can GameObject here so we can show/hide it when Delete Mode toggles.")]
     [SerializeField] private GameObject _garbageCan;
+    [SerializeField] private SpawnPointSelector _spawnPointSelector; 
 
     // All Grabbable components in the scene
     private List<Grabbable> _allGrabbables = new List<Grabbable>();
@@ -31,8 +32,15 @@ public class DeleteModeManager : MonoBehaviour
         rightHandInteractor.SetActive(_deleteMode); 
 
         // Show or hide the garbage can in the world
-        if (_garbageCan != null)
+        if (_garbageCan != null && _spawnPointSelector != null)
         {
+            if (_deleteMode)
+            {
+                Vector3 spawn = _spawnPointSelector.GetLockedSpawnPoint();
+                // optional: bump it up a little so it’s not clipping into the floor
+                // spawn.y += 0.1f;
+                _garbageCan.transform.position = spawn;
+            }
             _garbageCan.SetActive(_deleteMode);
         }
 
