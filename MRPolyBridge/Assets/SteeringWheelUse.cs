@@ -21,51 +21,102 @@ public class SteeringWheelUse : MonoBehaviour, IHandGrabUseDelegate
     public UnityEvent<float> OnForwardBackAxis;  // fires each frame with value [-1..1]
 
     [SerializeField] private HandGrabUseInteractable _useInteractable;
+    [SerializeField] private HandGrabInteractable _grabInteractable;  // primary grab
+
+    // runtime state
+    private bool _isUsing = false;
+    private float _lastStrength = 0f;
 
     void Awake()
     {
         // _useInteractable = GetComponent<HandGrabUseInteractable>();
         _useInteractable.InjectOptionalForwardUseDelegate(this);
     }
+    void Update()
+    {
+        // 1) Steering: any time the wheel is grabbed
+        bool grabbed = _grabInteractable.SelectingInteractors.Count > 0;
+        float steer = 0f;
+        // if (grabbed)
+        // {
+        //     // 1) Get signed angle between 0 and wheel’s Z rotation
+        //     float signedZ = Mathf.DeltaAngle(0f, _wheelPivot.localEulerAngles.z);
+        //     // 2) Clamp it
+        //     float clampedZ = Mathf.Clamp(signedZ, -maxTiltAngle, maxTiltAngle);
 
-    // IHandGrabUseDelegate ▶ called once when you start pinching/gripping
-    [ContextMenu("Forward")]
+        //     // 3) If it’s outside that limit, snap it back:
+        //     if (!Mathf.Approximately(signedZ, clampedZ))
+        //     {
+        //         _wheelPivot.localRotation = Quaternion.Euler(0f, 0f, clampedZ);
+        //     }
+
+        //     // 3) Normalize into [-1..1], with a dead‑zone
+        //     if (Mathf.Abs(clampedZ) >= deadZoneAngle)
+        //         steer = clampedZ / maxTiltAngle;
+
+
+        // }
+        if (grabbed)
+        {
+            // At this point _wheelPivot.localEulerAngles.z is guaranteed clamped
+            float z = _wheelPivot.localEulerAngles.z;
+            float signedZ = z > 180f ? z - 360f : z;
+            if (Mathf.Abs(signedZ) >= deadZoneAngle)
+                steer = signedZ / maxTiltAngle;
+        }
+        // 2) Throttle: only if pinching (“use”) is in progress
+        float throttle = _isUsing ? _lastStrength : 0f;
+
+        // 3) Send combined input each frame
+        _carController.HandleVRInput(new Vector2(steer, throttle));
+    }
+    void LateUpdate()
+    {
+        // 2) Enforce the clamp after transformers move the pivot
+        float rawZ = _wheelPivot.localEulerAngles.z;
+        float signedZ = Mathf.DeltaAngle(0f, rawZ);
+        float clampedZ = Mathf.Clamp(signedZ, -maxTiltAngle, maxTiltAngle);
+
+        if (!Mathf.Approximately(signedZ, clampedZ))
+        {
+            // snap it back into range
+            _wheelPivot.localRotation = Quaternion.Euler(0f, 0f, clampedZ);
+        }
+    }
+    // IHandGrabUseDelegate ↓↓↓
     public void BeginUse()
     {
-        OnUseStarted?.Invoke();
-        Debug.Log("Began use");
+        _isUsing = true;
     }
 
-    // IHandGrabUseDelegate ▶ called once when you release pinch/grip
     public void EndUse()
     {
-        OnUseEnded?.Invoke();
-        // zero out your forward/back
-        _carController.HandleVRInput(Vector2.zero);
-        Debug.Log("Ended use");
+        _isUsing = false;
     }
 
-    // IHandGrabUseDelegate ▶ each frame while pinching/gripping
     public float ComputeUseStrength(float strength)
     {
-        // 1) Map wheel Z‑rotation → forward/back
-        //    mirror your joystick’s Z‑axis logic:
-        var euler = _wheelPivot.localEulerAngles;
-        float angleZ = euler.z > 180f ? euler.z - 360f : euler.z;
-        float clampedZ = Mathf.Clamp(angleZ, -maxTiltAngle, maxTiltAngle);
-
-        float forwardBack = 0f;
-        if (Mathf.Abs(clampedZ) >= deadZoneAngle)
-            forwardBack = -clampedZ / maxTiltAngle;
-
-        // 2) Fire your event so other systems can listen
-        OnForwardBackAxis?.Invoke(forwardBack);
-
-        // 3) Send only forward/back into your car (no steering)
-        _carController.HandleVRInput(new Vector2(0f, forwardBack));
-
-        // 4) Return strength unchanged so UseProgress still tracks finger curl
-        Debug.Log($"Wheel UseStrength: {strength:F2}");
+        _lastStrength = strength;
+        // return unmodified so UseProgress tracks your real pinch
         return strength;
+    }
+    /// <summary>
+    /// Call this any time you completely reset the car.
+    /// It will zero the wheel pivot and clear any use state.
+    /// </summary>
+    public void ResetSteeringWheel()
+    {
+        // 1) Snap the visual wheel back upright
+        if (_wheelPivot != null)
+            _wheelPivot.localRotation = Quaternion.identity;
+
+        // 2) Clear any “use” state so we don’t instantly throttle
+        _isUsing = false;
+        _lastStrength = 0f;
+
+        // 3) (Optional) clear any grab state if you want
+        // _grabInteractable.ClearSelectingInteractors(); // if you expose a method for that
+
+        Debug.Log("[SteeringWheelUse] Wheel has been reset to center.");
     }
 }
