@@ -27,7 +27,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshPro _levelLabel;
     [Tooltip("Panel (or any GameObject) you show when the player wins.")]
     [SerializeField] private GameObject _youWinPanel;
-    [SerializeField] private TextMeshPro winningText;
+    [SerializeField] private TextMeshProUGUI winningText;
+    [Header("WIN SCREEN STARS")]
+    [Tooltip("Assign the 3 star GameObjects (or Images) in order: star1, star2, star3")]
+    [SerializeField] private GameObject[] _starIcons = new GameObject[3];
+
 
     private float budgetToUse;
 
@@ -218,6 +222,16 @@ public class GameManager : MonoBehaviour
         if (_youWinPanel != null)
             _youWinPanel.SetActive(true);
 
+        // Update stars
+        UpdateStarsOnWinScreen();
+        
+        int starsEarned = CalculateStarsEarned();
+        string starKey = $"Level_{_currentLevelIndex + 1}_Stars";
+        int previous = PlayerPrefs.GetInt(starKey, 0);
+        PlayerPrefs.SetInt(starKey, Mathf.Max(previous, starsEarned));
+        PlayerPrefs.Save();
+
+
         // Re‐enable the Start/Next button so the player can advance:
         _startOrNextButton.SetActive(true);
         _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Next Level";
@@ -305,6 +319,56 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt(key, isUnlocked ? 1 : 0); // Save the unlocked state (1 = unlocked, 0 = locked)
         PlayerPrefs.Save();
         Debug.Log(key + " has been unlocked");
+    }
+    /// <summary>
+    /// Reads the remaining budget and the current level's star thresholds,
+    /// then turns on the appropriate number of stars.
+    /// </summary>
+    private void UpdateStarsOnWinScreen()
+    {
+        // 1) Get remaining budget
+        float remaining = BudgetManager.Instance.GetCurrentBudget();
+
+        // 2) Read thresholds
+        var thresholds = levelManager.levels[_currentLevelIndex].starThresholds;
+
+        // 3) Determine how many stars
+        int starsEarned = CalculateStarsEarned();
+        // // thresholds assumed sorted ascending [oneStar, twoStar, threeStar]
+        // for (int i = 0; i < thresholds.Length; i++)
+        // {
+        //     if (remaining >= thresholds[i])
+        //         starsEarned = i + 1;
+        // }
+
+        // 4) Turn on/off icons
+        for (int i = 0; i < _starIcons.Length; i++)
+        {
+            _starIcons[i].SetActive(i < starsEarned);
+        }
+    }
+    /// <summary>
+    /// Calculates how many stars the player earned this level,
+    /// based on the remaining budget and the Level.starThresholds array.
+    /// </summary>
+    /// <returns>Number of stars earned (0–3).</returns>
+    public int CalculateStarsEarned()
+    {
+        // 1. Get the remaining budget from your BudgetManager
+        float remaining = BudgetManager.Instance.GetCurrentBudget();
+
+        // 2. Grab the thresholds for the current level
+        float[] thresholds = levelManager.levels[_currentLevelIndex].starThresholds;
+
+        // 3. Determine stars earned by seeing how many thresholds were met
+        int stars = 0;
+        for (int i = 0; i < thresholds.Length; i++)
+        {
+            if (remaining >= thresholds[i])
+                stars = i + 1;  // i=0 → 1 star, i=1 → 2 stars, etc.
+        }
+
+        return stars;
     }
 
     /// <summary>

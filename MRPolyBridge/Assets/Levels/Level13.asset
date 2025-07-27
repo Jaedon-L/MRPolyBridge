@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53dbca36bea2631418298e053454f3d9, type: 3}
-  m_Name: Level7
+  m_Name: Level13
   m_EditorClassIdentifier: 
-  levelName: Level 7
-  levelPrefab: {fileID: 8670892056882968229, guid: df953a533879f2b428c2f6e2b7dc8fc7, type: 3}
-  budget: 200
+  levelName: Level 13
+  levelPrefab: {fileID: 0}
+  budget: 0
   isUnlocked: 0
   starThresholds:
+  - 20
   - 50
-  - 100
-  - 150
-  breakForceThreshold: 5000
-  breakTorqueThreshold: 4000
-  supportBonusForce: 1000
-  supportBonusTorque: 800
+  - 80
+  breakForceThreshold: 15
+  breakTorqueThreshold: 8
+  supportBonusForce: 3
+  supportBonusTorque: 2

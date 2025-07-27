@@ -16,6 +16,10 @@ MonoBehaviour:
   levelPrefab: {fileID: 8670892056882968229, guid: 11292b8223f5deb45ac2f95ca6d78dcc, type: 3}
   budget: 150
   isUnlocked: 0
+  starThresholds:
+  - 20
+  - 50
+  - 100
   breakForceThreshold: 6000
   breakTorqueThreshold: 5000
   supportBonusForce: 1000

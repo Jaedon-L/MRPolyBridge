@@ -35,7 +35,7 @@ public class LevelManager : MonoBehaviour
         // Create a new instance of the Level ScriptableObject
         Button newButton = Instantiate(buttonPrefab, buttonParent);
         TMP_Text buttonTxt = newButton.GetComponentInChildren<TMP_Text>();
-        buttonTxt.text = "L" + (levelButtons.Count + 1);
+        buttonTxt.text = "" + (levelButtons.Count + 1);
         // Assign a name to the level button based on the current count of levels
         newButton.name = "LevelButton " + (levelButtons.Count + 1);
 
@@ -90,12 +90,36 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < levelButtons.Count; i++)
         {
             int index = i;
-            levelButtons[i].onClick.AddListener(() => gameManager.SpawnCurrentLevel(index));
-            levelButtons[i].interactable = levels[i].isUnlocked;
-            // menu.SetActive(false);
-        }
+            var btn = levelButtons[i];
+            btn.onClick.AddListener(() => gameManager.SpawnCurrentLevel(index));
 
+            // 1) unlock/interactable
+            bool unlocked = levels[i].isUnlocked;
+            btn.interactable = unlocked;
+
+            // 2) fetch our helper component
+            var select = btn.GetComponent<LevelSelectButton>();
+            if (select != null)
+            {
+                // show/hide lock overlay
+                select.lockOverlay.SetActive(!unlocked);
+
+                // read saved star count
+                int levelNum = i + 1;
+                string starKey = $"Level_{levelNum}_Stars";
+                int stars = PlayerPrefs.GetInt(starKey, 0);
+
+                // turn on the right # of stars
+                for (int s = 0; s < select.starIcons.Length; s++)
+                    select.starIcons[s].SetActive(s < stars);
+            }
+            else
+            {
+                Debug.LogWarning($"LevelSelectButton component missing on {btn.name}");
+            }
+        }
     }
+
     [ContextMenu("toggleSettings")]
     public void ToggleSettings()
     {
