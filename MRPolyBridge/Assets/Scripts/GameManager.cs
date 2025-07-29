@@ -31,8 +31,6 @@ public class GameManager : MonoBehaviour
     [Header("WIN SCREEN STARS")]
     [Tooltip("Assign the 3 star GameObjects (or Images) in order: star1, star2, star3")]
     [SerializeField] private GameObject[] _starIcons = new GameObject[3];
-
-
     private float budgetToUse;
 
 
@@ -224,14 +222,14 @@ public class GameManager : MonoBehaviour
 
         // Update stars
         UpdateStarsOnWinScreen();
-        
+
         int starsEarned = CalculateStarsEarned();
         string starKey = $"Level_{_currentLevelIndex + 1}_Stars";
         int previous = PlayerPrefs.GetInt(starKey, 0);
         PlayerPrefs.SetInt(starKey, Mathf.Max(previous, starsEarned));
         PlayerPrefs.Save();
 
-
+        UpdateEndLevelInfoText();
         // Re‐enable the Start/Next button so the player can advance:
         _startOrNextButton.SetActive(true);
         _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Next Level";
@@ -326,11 +324,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UpdateStarsOnWinScreen()
     {
-        // 1) Get remaining budget
-        float remaining = BudgetManager.Instance.GetCurrentBudget();
+        // // 1) Get remaining budget
+        // float remaining = BudgetManager.Instance.GetCurrentBudget();
 
-        // 2) Read thresholds
-        var thresholds = levelManager.levels[_currentLevelIndex].starThresholds;
+        // // 2) Read thresholds
+        // var thresholds = levelManager.levels[_currentLevelIndex].starThresholds;
 
         // 3) Determine how many stars
         int starsEarned = CalculateStarsEarned();
@@ -370,6 +368,53 @@ public class GameManager : MonoBehaviour
 
         return stars;
     }
+    /// <summary>
+    /// Updates the end‑of‑level info text to show:
+    /// - Budget remaining
+    /// - If under 3 stars: how much more to hit the next star thresholds
+    /// </summary>
+    public void UpdateEndLevelInfoText()
+    {
+        float remaining = BudgetManager.Instance.GetCurrentBudget();
+        var thresholds = levelManager.levels[_currentLevelIndex].starThresholds; // [1★, 2★, 3★]
+        int stars = CalculateStarsEarned();
+
+        var sb = new System.Text.StringBuilder();
+
+
+
+        if (stars < thresholds.Length)
+        {
+            // Only show the unmet star levels above what you've already earned
+            for (int next = stars; next < thresholds.Length; next++)
+            {
+                float needed = Mathf.Max(0, thresholds[next] - remaining);
+                int starLevel = next + 1;
+
+                // Choose font size based on star level
+                float fontSize = starLevel == 1 ? 0.033f :
+                                 starLevel == 2 ? 0.038f : 0.04f;
+
+                // Build the inline star icons (next+1 stars)
+                string starIcons = "";
+                for (int i = 0; i <= next; i++)
+                    starIcons += "<sprite name=\"goldStar_0\">";
+                // 1) Show remaining budget
+                sb.AppendLine($"<size={fontSize}>You saved {remaining:F0} Bridge Bucks.");
+                sb.AppendLine($"<size={fontSize}>+{needed:F0} to reach {starIcons}");
+            }
+        }
+        else
+        {
+            sb.AppendLine($"<size={0.04}>You saved {remaining:F0} Bridge Bucks.");
+            // Perfect run (all stars earned)
+            sb.AppendLine("<size={0.04}>Perfect run!! You earned all 3 <sprite name=\"goldStar_0\">!");
+        }
+
+        if (winningText != null)
+            winningText.text = sb.ToString();
+    }
+
 
     /// <summary>
     /// Updates the UI text that says “Level: X”.

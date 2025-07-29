@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53dbca36bea2631418298e053454f3d9, type: 3}
-  m_Name: Level13
+  m_Name: Level14
   m_EditorClassIdentifier: 
-  levelName: Level 13
+  levelName: Level 14
   levelPrefab: {fileID: 8670892056882968229, guid: 0ce7e6e35730ca244bb09ef4a664c489, type: 3}
-  budget: 200
+  budget: 0
   isUnlocked: 1
   starThresholds:
   - 20

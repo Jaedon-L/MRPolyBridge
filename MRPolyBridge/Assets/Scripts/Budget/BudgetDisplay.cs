@@ -3,7 +3,7 @@ using TMPro;
 
 public class BudgetDisplay : MonoBehaviour
 {
-    [SerializeField] private TMP_Text budgetText;
+    [SerializeField] private TextMeshProUGUI budgetText;
 
     private void OnEnable()
     {
@@ -19,6 +19,11 @@ public class BudgetDisplay : MonoBehaviour
 
     public void UpdateBudgetText(float newBudget)
     {
-        budgetText.text = $"Budget: {newBudget:F1}";
+        if (budgetText == null)
+        {
+            Debug.LogError("BudgetDisplay: budgetText is not assigned!");
+            return;
+        }
+        budgetText.text = $"${newBudget:F1}";
     }
 }
