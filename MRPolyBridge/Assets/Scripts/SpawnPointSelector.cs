@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Oculus.Interaction;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +23,8 @@ public class SpawnPointSelector : MonoBehaviour
 
     void Start()
     {
-        spawnPointBtn.onClick.AddListener(ResetSpawnPoint);
+        // spawnPointBtn.onClick.AddListener(ResetSpawnPoint);
+        spawnPointBtn.GetComponentInChildren<InteractableUnityEventWrapper>().WhenSelect.AddListener(ResetSpawnPoint);
 
         lineRenderer.positionCount = 2;
         isLocked = true;

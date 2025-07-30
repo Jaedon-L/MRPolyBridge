@@ -1,4 +1,5 @@
 using Meta.WitAi.TTS.Utilities;
+using Oculus.Interaction;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,7 +53,9 @@ public class InstructionManager : MonoBehaviour
 
         EventManager.Instance.StartTutorial += InitializeCoroutine;
         EventManager.Instance.OnChangeInstruction += ActivateInstruction;
-        nextButton.onClick.AddListener(() => ActivateInstruction());
+        // nextButton.onClick.AddListener(() => ActivateInstruction());
+        nextButton.GetComponentInChildren<InteractableUnityEventWrapper>().WhenSelect.AddListener(() => ActivateInstruction()); 
+
     }
 
     /// <summary>

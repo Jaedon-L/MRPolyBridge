@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Oculus.Interaction;
 using TMPro;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -91,8 +92,8 @@ public class LevelManager : MonoBehaviour
         {
             int index = i;
             var btn = levelButtons[i];
-            btn.onClick.AddListener(() => gameManager.SpawnCurrentLevel(index));
-
+            // btn.onClick.AddListener(() => gameManager.SpawnCurrentLevel(index));
+            btn.GetComponentInChildren<InteractableUnityEventWrapper>().WhenSelect.AddListener(() => gameManager.SpawnCurrentLevel(index));
             // 1) unlock/interactable
             bool unlocked = levels[i].isUnlocked;
             btn.interactable = unlocked;
