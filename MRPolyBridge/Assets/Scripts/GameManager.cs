@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Assign the 3 star GameObjects (or Images) in order: star1, star2, star3")]
     [SerializeField] private GameObject[] _starIcons = new GameObject[3];
     private float budgetToUse;
-
+    [SerializeField] private SteeringWheelUse steeringWheel;
 
     private Vector3 spawnPosition;
     private int _currentLevelIndex = 0;        // zero‐based index into _levelPrefabs
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
         //    We assume each level prefab either:
         //      a) already has a child GameObject with LevelEndTrigger attached, OR
         //      b) you supply a separate "_levelEndTriggerPrefab" you parent under this level.
-        //
+        
         LevelEndTrigger trigger = _currentLevelInstance.GetComponentInChildren<LevelEndTrigger>();
         if (trigger == null && _levelEndTriggerPrefab != null)
         {
@@ -172,7 +172,11 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning($"[GameManager] Level {levelNumber + 1} has no LevelEndTrigger. It will never end.");
         }
-
+        if (steeringWheel != null)
+        {
+            var car = FindFirstObjectByType<PrometeoCarController>();
+            steeringWheel.SetCarController(car); 
+        }
         Debug.Log($"[GameManager] Spawned Level #{levelNumber + 1}.");
         UpdateLevelLabel();
     }

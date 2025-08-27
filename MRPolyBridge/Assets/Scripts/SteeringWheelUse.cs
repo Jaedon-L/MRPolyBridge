@@ -15,7 +15,7 @@ public class SteeringWheelUse : MonoBehaviour, IHandGrabUseDelegate
     public enum Gear { Park, Reverse, Drive }
 
     [Header("Car")]
-    [SerializeField] private PrometeoCarController _carController;
+    [SerializeField] public PrometeoCarController _carController;
 
     [Header("Wheel Pivot")]
     [SerializeField] private Transform _wheelPivot;  // the axis you turn
@@ -284,10 +284,25 @@ public class SteeringWheelUse : MonoBehaviour, IHandGrabUseDelegate
         Debug.LogFormat("[SteeringWheelUse] Wheel has been reset to center (accumulator cleared). prevRawZ={0:F2}", _prevRawZ);
     }
 
-
+    public void SetCarController(PrometeoCarController car)
+    {
+        _carController = car;
+        // keep things in sync when wiring a new car
+        SyncAccumulatedAngleToTransform(); // optional but helpful
+        Debug.LogFormat("[SteeringWheelUse] Car assigned: {0}", car != null ? car.name : "null");
+    }
     // Helper: friendly getter for UI
     public string GetCurrentGearName()
     {
         return _currentGear.ToString();
     }
+    /// <summary>
+    /// Returns true if no interactors (hands) are currently grabbing the wheel.
+    /// Useful for resuming steering wheel position updates only when fully released.
+    /// </summary>
+    public bool NoInteractors()
+    {
+        return _grabInteractable == null || _grabInteractable.SelectingInteractors.Count == 0;
+    }
+
 }

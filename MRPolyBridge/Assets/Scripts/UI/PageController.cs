@@ -83,7 +83,11 @@ public class PageController : MonoBehaviour
     public void OpenPage(string pageName)
     {
         if (curPage)
+        {
             screenHistory.Push(curPage);
+            // Explicitly close the current page
+            curPage.gameObject.SetActive(false);
+        }
         EnableSingleScreen(pageName);
         onScreenOpen.Invoke();
         // ToggleHide(false);

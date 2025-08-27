@@ -15,7 +15,7 @@ MonoBehaviour:
   levelName: Level 12
   levelPrefab: {fileID: 8670892056882968229, guid: 0ce7e6e35730ca244bb09ef4a664c489, type: 3}
   budget: 300
-  isUnlocked: 1
+  isUnlocked: 0
   starThresholds:
   - 500
   - 600
