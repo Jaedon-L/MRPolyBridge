@@ -59,7 +59,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - OVROverlayCanvas Rendering
   m_SortingLayers:
   - name: HandUI
     uniqueID: 927537093
