@@ -19,8 +19,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     [SerializeField] private Button buttonPrefab;
     [SerializeField] private Transform buttonParent;
-    [SerializeField] private GameObject menu;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Awake()
     {
         LoadLevelStates();
@@ -119,13 +118,6 @@ public class LevelManager : MonoBehaviour
                 Debug.LogWarning($"LevelSelectButton component missing on {btn.name}");
             }
         }
-    }
-
-    [ContextMenu("toggleSettings")]
-    public void ToggleSettings()
-    {
-
-        menu.SetActive(!menu.activeSelf);
     }
 
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
@@ -16,23 +17,20 @@ public class GameManager : MonoBehaviour
     [Header("CAR & TARGET")]
     [Tooltip("The only 'car' GameObject or tag you use. We check collisions with the finish zone.")]
     [SerializeField] private string _carTag = "Car"; // assume your car has tag "Player"
-    [Tooltip("Exactly one LevelEndTrigger in each level prefab. We will subscribe at runtime.")]
-    [SerializeField] private GameObject _levelEndTriggerPrefab;
-    // (This is optional if your LevelPrefabs already include the trigger; see later notes.)
 
     [Header("UI REFERENCES")]
-    [Tooltip("Button you press to start level or go to next level.")]
-    [SerializeField] private GameObject _startOrNextButton;
     [Tooltip("Text component that shows 'Level: X'.")]
     [SerializeField] private TextMeshPro _levelLabel;
-    [Tooltip("Panel (or any GameObject) you show when the player wins.")]
-    [SerializeField] private GameObject _youWinPanel;
+
     [SerializeField] private TextMeshProUGUI winningText;
     [Header("WIN SCREEN STARS")]
     [Tooltip("Assign the 3 star GameObjects (or Images) in order: star1, star2, star3")]
     [SerializeField] private GameObject[] _starIcons = new GameObject[3];
     private float budgetToUse;
     [SerializeField] private SteeringWheelUse steeringWheel;
+    [SerializeField] private GameObject menu;
+
+    public UnityEvent onWin;
 
     private Vector3 spawnPosition;
     private int _currentLevelIndex = 0;        // zero‐based index into _levelPrefabs
@@ -43,12 +41,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Hook up our Start/Next button:
-        _startOrNextButton.GetComponent<InteractableUnityEventWrapper>().WhenSelect.AddListener(OnStartOrNextPressed);
-
-        // Initially hide the Win panel:
-        if (_youWinPanel != null)
-            _youWinPanel.SetActive(false);
 
         // Initialize the players current level
         LoadCurrentLevel();
@@ -65,7 +57,7 @@ public class GameManager : MonoBehaviour
     /// Called when the “Start Game” or “Next Level” button is pressed.
     /// </summary>
     [ContextMenu("Start")]
-    private void OnStartOrNextPressed()
+    public void OnStartOrNextPressed()
     {
         switch (_state)
         {
@@ -73,7 +65,6 @@ public class GameManager : MonoBehaviour
                 // First time: spawn level 0
                 SpawnCurrentLevel(_currentLevelIndex);
                 _state = GameState.Playing;
-                _startOrNextButton.SetActive(false);
                 break;
 
             case GameState.LevelComplete:
@@ -98,6 +89,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Load the player's current level from the saved data
     /// </summary>
+    [ContextMenu("StartcurrentLevel")]
     private void LoadCurrentLevel()
     {
         if (PlayerPrefs.HasKey("CurrentLevel"))
@@ -114,6 +106,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Spawns the prefab at _currentLevelIndex, and wires up its LevelEndTrigger.
     /// </summary>
+
     public void SpawnCurrentLevel(int levelNumber)
     {
         spawnPosition = spawnPointSelector.GetLockedSpawnPoint();
@@ -149,36 +142,38 @@ public class GameManager : MonoBehaviour
         //    We assume each level prefab either:
         //      a) already has a child GameObject with LevelEndTrigger attached, OR
         //      b) you supply a separate "_levelEndTriggerPrefab" you parent under this level.
-        
-        LevelEndTrigger trigger = _currentLevelInstance.GetComponentInChildren<LevelEndTrigger>();
-        if (trigger == null && _levelEndTriggerPrefab != null)
-        {
-            // If the level prefab did not include one, instantiate a fresh one:
-            GameObject go = Instantiate(_levelEndTriggerPrefab, Vector3.zero, Quaternion.identity);
-            go.transform.SetParent(_currentLevelInstance.transform, false);
-            trigger = go.GetComponent<LevelEndTrigger>();
-            if (trigger == null)
-            {
-                Debug.LogError("[GameManager] The LevelEndTriggerPrefab has no LevelEndTrigger component.");
-            }
-        }
 
-        if (trigger != null)
-        {
-            // Listen for its callback:
-            trigger.Initialize(_carTag, OnLevelCompleted);
-        }
-        else
-        {
-            Debug.LogWarning($"[GameManager] Level {levelNumber + 1} has no LevelEndTrigger. It will never end.");
-        }
+        // LevelEndTrigger trigger = _currentLevelInstance.GetComponentInChildren<LevelEndTrigger>();
+        // if (trigger == null && _levelEndTriggerPrefab != null)
+        // {
+        //     // If the level prefab did not include one, instantiate a fresh one:
+        //     GameObject go = Instantiate(_levelEndTriggerPrefab, Vector3.zero, Quaternion.identity);
+        //     go.transform.SetParent(_currentLevelInstance.transform, false);
+        //     trigger = go.GetComponent<LevelEndTrigger>();
+        //     if (trigger == null)
+        //     {
+        //         Debug.LogError("[GameManager] The LevelEndTriggerPrefab has no LevelEndTrigger component.");
+        //     }
+        // }
+
+        // if (trigger != null)
+        // {
+        //     // Listen for its callback:
+        //     trigger.Initialize(_carTag, OnLevelCompleted);
+        // }
+        // else
+        // {
+        //     Debug.LogWarning($"[GameManager] Level {levelNumber + 1} has no LevelEndTrigger. It will never end.");
+        // }
         if (steeringWheel != null)
         {
             var car = FindFirstObjectByType<PrometeoCarController>();
-            steeringWheel.SetCarController(car); 
+            steeringWheel.SetCarController(car);
         }
         Debug.Log($"[GameManager] Spawned Level #{levelNumber + 1}.");
         UpdateLevelLabel();
+        _state = GameState.Playing; // Ensure the game is in playing state after spawn
+
     }
 
     /// <summary>
@@ -209,21 +204,26 @@ public class GameManager : MonoBehaviour
     {
         return levelManager.levels[idx].budget;
     }
-
+    [ContextMenu("onWin")]
+    public void OnWinScreen()
+    {
+        menu.SetActive(true);
+        onWin.Invoke();
+    }
     /// <summary>
     /// Called by LevelEndTrigger when the car enters the finish zone.
     /// </summary>
-    private void OnLevelCompleted()
+    public void OnLevelCompleted()
     {
         if (_state != GameState.Playing) return;
 
         _state = GameState.LevelComplete;
         Debug.Log($"[GameManager] Level {_currentLevelIndex + 1} Complete!");
 
-        // Show "You Win!" panel:
-        if (_youWinPanel != null)
-            _youWinPanel.SetActive(true);
-
+        // // Show "You Win!" panel:
+        // if (_youWinPanel != null)
+        //     _youWinPanel.SetActive(true);
+        OnWinScreen();
         // Update stars
         UpdateStarsOnWinScreen();
 
@@ -235,13 +235,13 @@ public class GameManager : MonoBehaviour
 
         UpdateEndLevelInfoText();
         // Re‐enable the Start/Next button so the player can advance:
-        _startOrNextButton.SetActive(true);
-        _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Next Level";
+        // _startOrNextButton.SetActive(true);
+        // _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Next Level";
 
         // If this was the last level, change button text accordingly:
         if (_currentLevelIndex == levelManager.levels.Count - 1)
         {
-            _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Finish";
+            // _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Finish";
             _state = GameState.AllFinished;
         }
 
@@ -278,26 +278,17 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void AdvanceToNextLevel()
     {
-        // Hide the Win panel
-        if (_youWinPanel != null)
-            _youWinPanel.SetActive(false);
 
         if (_currentLevelIndex < levelManager.levels.Count)
         {
             // Spawn and immediately go to PLAYING
             SpawnCurrentLevel(_currentLevelIndex);
             _state = GameState.Playing;
-
-            // Disable the button while playing
-            _startOrNextButton.SetActive(false);
-            _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Playing...";
         }
         else
         {
             // We have actually finished all levels
             Debug.Log("[GameManager] You have beaten every level!");
-            _startOrNextButton.SetActive(false);
-            _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "All Done!";
         }
     }
 
@@ -328,20 +319,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UpdateStarsOnWinScreen()
     {
-        // // 1) Get remaining budget
-        // float remaining = BudgetManager.Instance.GetCurrentBudget();
-
-        // // 2) Read thresholds
-        // var thresholds = levelManager.levels[_currentLevelIndex].starThresholds;
-
-        // 3) Determine how many stars
         int starsEarned = CalculateStarsEarned();
-        // // thresholds assumed sorted ascending [oneStar, twoStar, threeStar]
-        // for (int i = 0; i < thresholds.Length; i++)
-        // {
-        //     if (remaining >= thresholds[i])
-        //         starsEarned = i + 1;
-        // }
 
         // 4) Turn on/off icons
         for (int i = 0; i < _starIcons.Length; i++)
@@ -349,6 +327,7 @@ public class GameManager : MonoBehaviour
             _starIcons[i].SetActive(i < starsEarned);
         }
     }
+
     /// <summary>
     /// Calculates how many stars the player earned this level,
     /// based on the remaining budget and the Level.starThresholds array.
@@ -430,6 +409,14 @@ public class GameManager : MonoBehaviour
             _levelLabel.text = $"Current Level: {_currentLevelIndex + 1}";
         }
     }
+
+    [ContextMenu("toggleSettings")]
+    public void ToggleSettings()
+    {
+
+        menu.SetActive(!menu.activeSelf);
+    }
+
     [ContextMenu("Clear All Saves")]
     private void ClearAllSaves()
     {

@@ -4,6 +4,12 @@ public class LevelEndTrigger : MonoBehaviour
 {
     private string _carTag = "Car";
     private System.Action _onComplete = null;
+    private GameManager gameManager;
+
+    void Awake()
+    {
+        gameManager = FindFirstObjectByType<GameManager>(); 
+    }
 
     /// <summary>
     /// Call this right after instantiating a LevelEndTrigger so it knows
@@ -19,8 +25,11 @@ public class LevelEndTrigger : MonoBehaviour
     {
         if (other.CompareTag(_carTag))
         {
+            gameManager.OnLevelCompleted();
             // Car has entered the finish zone
-            _onComplete?.Invoke();
+            // _onComplete?.Invoke();
+            Debug.Log("trigger");
+
         }
     }
 }

@@ -25,10 +25,11 @@ public class SteeringWheelPositioner : MonoBehaviour
     private void Update()
     {
         Vector3 targetPos = GetTargetPos();
-        transform.position = Vector3.Lerp(transform.position, targetPos, smoothFactor * Time.deltaTime);
+        
 
         if (!freezeRotation && (steeringWheelUse == null || steeringWheelUse.NoInteractors())) // Only rotate if not frozen
         {
+            transform.position = Vector3.Lerp(transform.position, targetPos, smoothFactor * Time.deltaTime);
             Quaternion targetRot = GetTargetRot();
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, smoothFactor * Time.deltaTime);
         }
@@ -55,6 +56,7 @@ public class SteeringWheelPositioner : MonoBehaviour
     }
 
     // Helper methods for UnityEvent
+    [ContextMenu("stopWheelFollow")]
     public void PauseRotation(bool pause)
     {
         freezeRotation = pause;
