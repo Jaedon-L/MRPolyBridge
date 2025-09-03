@@ -209,6 +209,7 @@ public class GameManager : MonoBehaviour
     {
         menu.SetActive(true);
         onWin.Invoke();
+        AudioManager.Instance.PlaySFX("winSound"); 
     }
     /// <summary>
     /// Called by LevelEndTrigger when the car enters the finish zone.

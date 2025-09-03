@@ -528,6 +528,10 @@ PrefabInstance:
       value: Prometheus
       objectReference: {fileID: 0}
     - target: {fileID: 5627324277843759623, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: useSounds
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627324277843759623, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
       propertyPath: useVRInput
       value: 1
       objectReference: {fileID: 0}
