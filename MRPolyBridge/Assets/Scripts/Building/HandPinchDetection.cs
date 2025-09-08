@@ -52,6 +52,17 @@ public class HandPinchDetection : MonoBehaviour
     [Header("Build UI Settings")]
     [SerializeField] private GameObject insufficientBudgetPopupPrefab;
     [SerializeField] private Transform uiCanvasTransform; // parent for popups
+
+    [Tooltip("Meters of fingertip travel per click")]
+    [SerializeField] private float clickDistanceThreshold = 0.25f;
+
+    [Tooltip("Minimum seconds between calls to AudioManager to reduce spam")]
+    [SerializeField] private float minSfxInterval = 0.02f;
+
+    // runtime accumulators for preview audio:
+    private Vector3 _previewLastTipPos;
+    private float _previewDistanceAccumulator;
+    private float _lastSfxTime;
     void Update()
     {
         if (!buildingModeEnabled) return;
@@ -149,7 +160,7 @@ public class HandPinchDetection : MonoBehaviour
         float snappedZ = Mathf.Round(raw.z / gridSize) * gridSize;
 
         Vector3 spawnPos = new Vector3(snappedX, snappedY, snappedZ);
-        Debug.Log($"[SpawnSnapNode] raw tip={raw:F3} → snapped to {spawnPos:F3}");
+        // Debug.Log($"[SpawnSnapNode] raw tip={raw:F3} → snapped to {spawnPos:F3}");
 
         float cost = BudgetManager.Instance.NodeCost;
         if (!BudgetManager.Instance.TrySpend(cost))
@@ -158,15 +169,19 @@ public class HandPinchDetection : MonoBehaviour
             ShowInsufficientBudgetFeedback();
             return;
         }
+        //Sound effect
+        AudioManager.Instance.PlaySFX("pop");
+
         GameObject go = Instantiate(snapInteractablePrefab, spawnPos, Quaternion.identity);
         var si = go.GetComponentInChildren<SnapInteractable>();
         si.InjectRigidbody(snapAreaRb);
         go.tag = "BridgeNode";
+
         // Attach BuildCost:
         var buildCost = go.AddComponent<BuildCost>();
         buildCost.Initialize(BuildCost.ObjectType.Node, cost);
 
-        Debug.Log($"[SpawnSnapNode] Spawned node at {spawnPos} (cost {cost})");
+        // Debug.Log($"[SpawnSnapNode] Spawned node at {spawnPos} (cost {cost})");
 
     }
 
@@ -291,12 +306,14 @@ public class HandPinchDetection : MonoBehaviour
     {
         Debug.Log("[PlaceMainBeam] Spawning main wood beam.");
         SpawnBeam(A, B, woodBeamPrefab, isSupport: false);
+        AudioManager.Instance.PlaySFX("woodSpawn");
     }
 
     private void PlaceSupportBetween(Transform A, Transform B)
     {
         Debug.Log("[PlaceSupportBeam] Spawning support beam.");
         SpawnBeam(A, B, supportBeamPrefab, isSupport: true);
+        AudioManager.Instance.PlaySFX("supportSpawn");
     }
     private void ShowInsufficientBudgetFeedback()
     {
@@ -517,6 +534,43 @@ public class HandPinchDetection : MonoBehaviour
             Debug.Log("[PickClosestNode] No node within threshold.");
 
         return bestNode;
+    }
+
+    #endregion
+    #region Preview Audio Helpers
+
+    private void UpdatePreviewAudio(Vector3 currentTipPos)
+    {
+        if (AudioManager.Instance == null)
+            return;
+
+        // Distance traveled since last sample
+        float frameDelta = Vector3.Distance(currentTipPos, _previewLastTipPos);
+
+        // Clamp spikes
+        frameDelta = Mathf.Min(frameDelta, 0.5f);
+
+        _previewDistanceAccumulator += frameDelta;
+        _previewLastTipPos = currentTipPos;
+
+        while (_previewDistanceAccumulator >= clickDistanceThreshold)
+        {
+            // Throttle by time to avoid spamming manager if many clicks are queued in the same frame
+            if (Time.realtimeSinceStartup - _lastSfxTime >= minSfxInterval)
+            {
+                PlayPreviewClick();
+                _lastSfxTime = Time.realtimeSinceStartup;
+            }
+            _previewDistanceAccumulator -= clickDistanceThreshold;
+        }
+    }
+
+    private void PlayPreviewClick()
+    {
+        if (AudioManager.Instance == null) return;
+        AudioManager.Instance.PlaySFX("click");
+        // Optional: add debug for tuning
+        // Debug.Log($"[PlayPreviewClick] Played SFX '{previewSfxId}'");
     }
 
     #endregion

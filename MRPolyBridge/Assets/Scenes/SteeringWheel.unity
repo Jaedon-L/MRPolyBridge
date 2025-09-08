@@ -9657,6 +9657,7 @@ GameObject:
   - component: {fileID: 387925824}
   - component: {fileID: 387925826}
   - component: {fileID: 387925825}
+  - component: {fileID: 387925827}
   m_Layer: 3
   m_Name: editButtons
   m_TagString: Untagged
@@ -9799,6 +9800,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &387925827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387925822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7b7aaa3273461a4d93c0fc0f5f93f2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdDuration: 2
+  radialImage: {fileID: 0}
+  onActivated:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &388056269
 GameObject:
   m_ObjectHideFlags: 0
@@ -33347,6 +33365,14 @@ MonoBehaviour:
   sfxClips:
   - id: winSound
     clip: {fileID: 8300000, guid: d6945231be24c7240a281458fc849e1f, type: 3}
+  - id: woodSpawn
+    clip: {fileID: 8300000, guid: 613e318fa2ddf0243a47667aadde104f, type: 3}
+  - id: supportSpawn
+    clip: {fileID: 8300000, guid: 4c20b27449caff242aad62509581301b, type: 3}
+  - id: click
+    clip: {fileID: 8300000, guid: a36ca0704e18c0c49b2a35b51435d762, type: 3}
+  - id: pop
+    clip: {fileID: 8300000, guid: e5f41b2d57b73d64b81915501e168ec6, type: 3}
   sfxSource: {fileID: 1187743106}
 --- !u!4 &1187743105
 Transform:
@@ -49733,7 +49759,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4298419113189915559, guid: 4d451f2d267b62343bf555854cdec22c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.413
       objectReference: {fileID: 0}
     - target: {fileID: 4298419113189915559, guid: 4d451f2d267b62343bf555854cdec22c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -55756,6 +55782,8 @@ MonoBehaviour:
   gridSize: 0.075
   insufficientBudgetPopupPrefab: {fileID: 3573542296464150640, guid: b37f10f6df08ea544b5c50ebf5e4ad6b, type: 3}
   uiCanvasTransform: {fileID: 39136941}
+  clickDistanceThreshold: 0.25
+  minSfxInterval: 0.02
 --- !u!4 &2002156352
 Transform:
   m_ObjectHideFlags: 0
