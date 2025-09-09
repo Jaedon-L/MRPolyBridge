@@ -245,6 +245,7 @@ public class HandPinchDetection : MonoBehaviour
             currentLineRenderer.SetPosition(0, firstNodeTransform.position);
             currentLineRenderer.SetPosition(1, tip.position);
             // Debug.Log($"[UpdateSelectingEdgePreview] Preview from {firstNodeTransform.position} to {tip.position}");
+            UpdatePreviewAudio(tip.position);
         }
     }
 
@@ -284,6 +285,21 @@ public class HandPinchDetection : MonoBehaviour
         currentLineRenderer.positionCount = 2;
         currentLineRenderer.SetPosition(0, startPoint.position);
         currentLineRenderer.SetPosition(1, startPoint.position);
+
+        // --- Setup preview audio accumulators:
+        _previewDistanceAccumulator = 0f;
+        _previewLastTipPos = startPoint.position;
+        _lastSfxTime = -minSfxInterval;
+
+        // initial click via AudioManager (guarded)
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX("click");
+            Debug.Log("[BeginConnectionPreview] Played initial preview SFX.");
+        }
+
+
+
         Debug.Log($"[BeginConnectionPreview] Started preview at {startPoint.position}");
     }
 
@@ -296,6 +312,10 @@ public class HandPinchDetection : MonoBehaviour
         }
         currentPreviewLine = null;
         currentLineRenderer = null;
+
+        // reset audio accumulators
+        _previewDistanceAccumulator = 0f;
+        _lastSfxTime = 0f;
     }
 
     #endregion
@@ -570,7 +590,7 @@ public class HandPinchDetection : MonoBehaviour
         if (AudioManager.Instance == null) return;
         AudioManager.Instance.PlaySFX("click");
         // Optional: add debug for tuning
-        // Debug.Log($"[PlayPreviewClick] Played SFX '{previewSfxId}'");
+        // Debug.Log($"[PlayPreviewClick] Played click SFX ");
     }
 
     #endregion

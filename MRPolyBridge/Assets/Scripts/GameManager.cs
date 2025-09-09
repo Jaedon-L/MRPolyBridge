@@ -207,7 +207,7 @@ public class GameManager : MonoBehaviour
     [ContextMenu("onWin")]
     public void OnWinScreen()
     {
-        menu.SetActive(true);
+        // menu.SetActive(true);
         onWin.Invoke();
         AudioManager.Instance.PlaySFX("winSound"); 
     }

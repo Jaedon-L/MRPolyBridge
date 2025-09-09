@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 181cf2027999f5e448d865ca1e4b697c
+guid: 144907949f5d5a547a731af5178d2327
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -21,7 +21,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0

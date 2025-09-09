@@ -93,9 +93,16 @@ public class LevelManager : MonoBehaviour
             var btn = levelButtons[i];
             // btn.onClick.AddListener(() => gameManager.SpawnCurrentLevel(index));
             btn.GetComponentInChildren<InteractableUnityEventWrapper>().WhenSelect.AddListener(() => gameManager.SpawnCurrentLevel(index));
+
             // 1) unlock/interactable
             bool unlocked = levels[i].isUnlocked;
             btn.interactable = unlocked;
+            var poke = btn.GetComponentInChildren<PokeInteractable>();
+            if (poke != null)
+            {
+                poke.enabled = unlocked; // ✅ disables poke if locked
+            }
+
 
             // 2) fetch our helper component
             var select = btn.GetComponent<LevelSelectButton>();

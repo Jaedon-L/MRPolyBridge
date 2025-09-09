@@ -17,6 +17,7 @@ public class HoldToActivate : MonoBehaviour
     Coroutine holdCoroutine;
     float elapsed;
 
+
     // Called from InteractableUnityEventWrapper.WhenSelect (start the hold)
     public void StartHold()
     {
