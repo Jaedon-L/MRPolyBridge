@@ -207,9 +207,9 @@ public class GameManager : MonoBehaviour
     [ContextMenu("onWin")]
     public void OnWinScreen()
     {
-        // menu.SetActive(true);
+        menu.SetActive(true);
         onWin.Invoke();
-        AudioManager.Instance.PlaySFX("winSound"); 
+        AudioManager.Instance.PlaySFX("winSound");
     }
     /// <summary>
     /// Called by LevelEndTrigger when the car enters the finish zone.
@@ -365,11 +365,12 @@ public class GameManager : MonoBehaviour
 
         var sb = new System.Text.StringBuilder();
 
-
-
         if (stars < thresholds.Length)
         {
-            // Only show the unmet star levels above what you've already earned
+            // Always show savings once
+            sb.AppendLine($"<size=0.04>You saved {remaining:F0} Bridge Bucks.");
+
+            // Show how much more is needed for each *unearned* star level
             for (int next = stars; next < thresholds.Length; next++)
             {
                 float needed = Mathf.Max(0, thresholds[next] - remaining);
@@ -383,21 +384,21 @@ public class GameManager : MonoBehaviour
                 string starIcons = "";
                 for (int i = 0; i <= next; i++)
                     starIcons += "<sprite name=\"goldStar_0\">";
-                // 1) Show remaining budget
-                sb.AppendLine($"<size={fontSize}>You saved {remaining:F0} Bridge Bucks.");
+
                 sb.AppendLine($"<size={fontSize}>+{needed:F0} to reach {starIcons}");
             }
         }
         else
         {
-            sb.AppendLine($"<size={0.04}>You saved {remaining:F0} Bridge Bucks.");
             // Perfect run (all stars earned)
-            sb.AppendLine("<size={0.04}>Perfect run!! You earned all 3 <sprite name=\"goldStar_0\">!");
+            sb.AppendLine($"<size=0.04>You saved {remaining:F0} Bridge Bucks.");
+            sb.AppendLine("<size=0.04>Perfect run!! You earned all 3 <sprite name=\"goldStar_0\">!");
         }
 
         if (winningText != null)
             winningText.text = sb.ToString();
     }
+
 
 
     /// <summary>

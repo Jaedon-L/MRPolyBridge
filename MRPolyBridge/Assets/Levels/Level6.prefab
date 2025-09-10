@@ -646,6 +646,10 @@ PrefabInstance:
       propertyPath: m_Volume
       value: 0.029
       objectReference: {fileID: 0}
+    - target: {fileID: -7498799061585146306, guid: e5c80b2a95696ae48a93a08586a75ec2, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5230971429152286030, guid: e5c80b2a95696ae48a93a08586a75ec2, type: 3}
       propertyPath: m_LocalScale.x
       value: 3.054885
@@ -915,6 +919,22 @@ PrefabInstance:
     - target: {fileID: 4894619569196019945, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
       propertyPath: m_Name
       value: Prometheus
+      objectReference: {fileID: 0}
+    - target: {fileID: 6357283164675562370, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6357283164675562370, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6793792204554952704, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6793792204554952704, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

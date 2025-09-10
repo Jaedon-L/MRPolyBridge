@@ -61,6 +61,7 @@ public class PageController : MonoBehaviour
         isPageOpen = false;
         onCloseAll.Invoke();
     }
+    [ContextMenu("Open previous")]
     public void OpenPrevious()
     {
         if (screenHistory.Count > 0)

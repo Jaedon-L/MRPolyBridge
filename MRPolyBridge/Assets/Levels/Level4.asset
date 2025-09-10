@@ -19,7 +19,7 @@ MonoBehaviour:
   starThresholds:
   - 20
   - 50
-  - 80
+  - 70
   breakForceThreshold: 6000
   breakTorqueThreshold: 5000
   supportBonusForce: 1000

@@ -56,6 +56,8 @@ MonoBehaviour:
   autoLaunch: 1
   launcherSound: {fileID: 7216174924742825001}
   explosionSound: {fileID: 4962132491290213194}
+  launcherVolumeMultiplier: 0.5
+  explosionVolumeMultiplier: 0.2
 --- !u!82 &7216174924742825001
 AudioSource:
   m_ObjectHideFlags: 0

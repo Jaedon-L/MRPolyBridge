@@ -114,6 +114,8 @@ public class SteeringWheelUse : MonoBehaviour, IHandGrabUseDelegate
         if (_carController != null)
             _carController.HandleVRInput(new Vector2(steer, throttleSigned));
 
+        
+
         // 5) Optional frame events
         OnForwardBackAxis?.Invoke(throttleSigned);
 
@@ -177,6 +179,10 @@ public class SteeringWheelUse : MonoBehaviour, IHandGrabUseDelegate
         OnUseEnded?.Invoke();
     }
 
+    public void UseAudio(bool isOn)
+    {
+        _carController.useSounds = isOn; 
+    }
     public float ComputeUseStrength(float strength)
     {
         _lastStrength = strength;

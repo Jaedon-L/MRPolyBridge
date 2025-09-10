@@ -27,6 +27,12 @@ public class LeverSnap : MonoBehaviour
     public UnityEvent onSnapToReverse;
     public UnityEvent onSnapToDrive;
 
+    [Header("Resistance")]
+    public float resistanceStrength = 5f; // higher = stiffer lever
+    public float maxOffset = 0.1f;        // how far it can pull away before full resistance
+
+    private Vector3 grabOffset;
+
     // internal states
     bool isGrabbed = false;
     bool isSnapped = false;
@@ -50,6 +56,7 @@ public class LeverSnap : MonoBehaviour
 
         if (isGrabbed)
         {
+            ApplyResistance(); 
             // While grabbing, optionally snap when close enough
             if (!snapOnReleaseOnly)
             {
@@ -100,10 +107,26 @@ public class LeverSnap : MonoBehaviour
         }
     }
 
+    // --- Resistance simulation ---
+    void ApplyResistance()
+    {
+        if (currentAnchor == null) return;
+
+        Vector3 rawTarget = transformerToDisable != null ? transformerToDisable.transform.position : transform.position;
+        Vector3 delta = rawTarget - currentAnchor.position;
+
+        float distance = delta.magnitude;
+        float resistance = Mathf.Clamp01(distance / maxOffset) * resistanceStrength;
+
+        // Resistance reduces how quickly the lever follows the hand
+        transform.position = Vector3.Lerp(transform.position, rawTarget, Time.deltaTime * (1f / (1f + resistance)));
+    }
+
     // Public API: call these from your transformer / grab events
     public void OnGrabbed()
     {
         isGrabbed = true;
+        grabOffset = transform.position; // record initial grab point
         // if we were snapped previously we want to allow the user to pick it up and move again, unless you want it locked
         if (isSnapped)
         {

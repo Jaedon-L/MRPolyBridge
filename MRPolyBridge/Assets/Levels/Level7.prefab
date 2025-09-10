@@ -158,7 +158,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7493069027572910698}
-  - component: {fileID: 9151424255298807643}
   m_Layer: 0
   m_Name: Level7
   m_TagString: Untagged
@@ -195,22 +194,6 @@ Transform:
   - {fileID: 8756970749776204600}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9151424255298807643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8670892056882968229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39e75e739be00744fb876e28e1f1efe9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridSize: {x: 0.4865, y: 1, z: 0.511}
-  cellSize: 0.075
-  pointSize: 0.01
-  drawPoints: 1
 --- !u!1001 &960111082544824314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -789,7 +772,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3700553436700519607, guid: 0c64583f57d434a45b350b8109284613, type: 3}
       propertyPath: airStrength
-      value: 4
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 8046724522719245145, guid: 0c64583f57d434a45b350b8109284613, type: 3}
       propertyPath: m_LocalPosition.x
@@ -797,7 +780,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8046724522719245145, guid: 0c64583f57d434a45b350b8109284613, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.93
+      value: 1.0705
       objectReference: {fileID: 0}
     - target: {fileID: 8046724522719245145, guid: 0c64583f57d434a45b350b8109284613, type: 3}
       propertyPath: m_LocalPosition.z
@@ -834,6 +817,14 @@ PrefabInstance:
     - target: {fileID: 8101288606959106039, guid: 0c64583f57d434a45b350b8109284613, type: 3}
       propertyPath: m_Name
       value: AirZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 8220182599120203263, guid: 0c64583f57d434a45b350b8109284613, type: 3}
+      propertyPath: m_Size.z
+      value: 1.4954461
+      objectReference: {fileID: 0}
+    - target: {fileID: 8220182599120203263, guid: 0c64583f57d434a45b350b8109284613, type: 3}
+      propertyPath: m_Center.z
+      value: 0.09327608
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1300,7 +1291,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4549788024176288641, guid: 9e905e6d058bb5746847ae6f0f420eb9, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1193315820842496795, guid: 9e905e6d058bb5746847ae6f0f420eb9, type: 3}
+    - {fileID: 216848622343392233, guid: 9e905e6d058bb5746847ae6f0f420eb9, type: 3}
+    - {fileID: 1689682882627348751, guid: 9e905e6d058bb5746847ae6f0f420eb9, type: 3}
+    - {fileID: 1689682882830827700, guid: 9e905e6d058bb5746847ae6f0f420eb9, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7877468419587357376, guid: 9e905e6d058bb5746847ae6f0f420eb9, type: 3}
       insertIndex: -1

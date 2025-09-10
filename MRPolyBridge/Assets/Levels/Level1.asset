@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 1
   levelPrefab: {fileID: 5327428406052963930, guid: e2cdddf2ffae56a4097bf801ec394fd7, type: 3}
-  budget: 25
+  budget: 50
   isUnlocked: 1
   starThresholds:
   - 0

@@ -153,6 +153,21 @@ public class PrometeoCarController : MonoBehaviour
   [Tooltip("How quickly the steeringAxis moves toward the target vrInput.x.")]
   public float vrSteeringSpeed = 2f; // units per second
 
+
+  // tuning
+  [Header("Engine audio smoothing")]
+  public float enginePitchMultiplier = 0.04f; // speed -> pitch factor
+  public float pitchSmoothTime = 0.08f;
+  public float volumeSmoothTime = 0.12f;
+  public float maxEngineVolume = 1f;
+
+  // smoothing state (private)
+  private float _targetPitch;
+  private float _pitchVel;
+  private float _targetEngineVolume;
+  private float _volumeVel;
+
+
   // Start is called before the first frame update
   void Start()
   {
@@ -443,6 +458,8 @@ public class PrometeoCarController : MonoBehaviour
     // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
     localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
 
+    CarSounds();
+
     if (useVRInput)
     {
       // HandleVRInput(vrInput);
@@ -546,46 +563,122 @@ public class PrometeoCarController : MonoBehaviour
   // Apart from that, the tireScreechSound will play whenever the car starts drifting or losing traction.
   public void CarSounds()
   {
-
-    if (useSounds)
+    // Get master SFX settings if AudioManager exists
+    float globalSfxVol = 1f;
+    bool globalSfxMuted = false;
+    if (AudioManager.Instance != null)
     {
-      try
+      globalSfxVol = AudioManager.Instance.GetSFXVolume();
+      globalSfxMuted = AudioManager.Instance.IsSFXMuted();
+    }
+
+    // Compute whether audio should be audible (both local toggle and global mute)
+    bool audioAllowed = useSounds && !globalSfxMuted;
+
+    // --- Engine Sound (looped on car) ---
+    if (carEngineSound != null)
+    {
+      if (useSounds)
       {
-        if (carEngineSound != null)
+        // target pitch based on speed
+        _targetPitch = initialCarEngineSoundPitch + (Mathf.Abs(carRigidbody.linearVelocity.magnitude) * enginePitchMultiplier);
+        carEngineSound.pitch = Mathf.SmoothDamp(carEngineSound.pitch, _targetPitch, ref _pitchVel, pitchSmoothTime);
+
+        // target volume = global SFX volume * local max
+        _targetEngineVolume = audioAllowed ? Mathf.Clamp01(globalSfxVol * maxEngineVolume) : 0f;
+        carEngineSound.volume = Mathf.SmoothDamp(carEngineSound.volume, _targetEngineVolume, ref _volumeVel, volumeSmoothTime);
+
+        // play/stop logic based on smoothed volume threshold
+        if (carEngineSound.volume > 0.01f)
         {
-          float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(carRigidbody.linearVelocity.magnitude) / 25f);
-          carEngineSound.pitch = engineSoundPitch;
-        }
-        if ((isDrifting) || (isTractionLocked && Mathf.Abs(carSpeed) > 12f))
-        {
-          if (!tireScreechSound.isPlaying)
+          if (!carEngineSound.isPlaying)
           {
-            tireScreechSound.Play();
+            carEngineSound.Play();
           }
         }
-        else if ((!isDrifting) && (!isTractionLocked || Mathf.Abs(carSpeed) < 12f))
+        else
+        {
+          if (carEngineSound.isPlaying)
+          {
+            carEngineSound.Stop();
+          }
+        }
+      }
+
+    }
+
+    // --- Tire Screech Sound (loop) ---
+    if (tireScreechSound != null)
+    {
+      bool shouldPlayTireSound = audioAllowed && (isDrifting || (isTractionLocked && Mathf.Abs(carSpeed) > 12f));
+      if (shouldPlayTireSound)
+      {
+        // scale tire volume by global SFX volume too (optional small multiplier)
+        float desiredTireVol = Mathf.Clamp01(globalSfxVol * 1.0f);
+        // if you want smoothing for tire volume add similar smoothing variables; for brevity we set directly
+        if (!tireScreechSound.isPlaying)
+        {
+          tireScreechSound.volume = desiredTireVol;
+          tireScreechSound.Play();
+        }
+        else
+        {
+          // update volume if playing
+          tireScreechSound.volume = desiredTireVol;
+        }
+      }
+      else
+      {
+        if (tireScreechSound.isPlaying)
         {
           tireScreechSound.Stop();
         }
       }
-      catch (Exception ex)
-      {
-        Debug.LogWarning(ex);
-      }
     }
-    else if (!useSounds)
-    {
-      if (carEngineSound != null && carEngineSound.isPlaying)
-      {
-        carEngineSound.Stop();
-      }
-      if (tireScreechSound != null && tireScreechSound.isPlaying)
-      {
-        tireScreechSound.Stop();
-      }
-    }
-
   }
+
+  // public void CarSounds()
+  // {
+
+  //   if (useSounds)
+  //   {
+  //     try
+  //     {
+  //       if (carEngineSound != null)
+  //       {
+  //         float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(carRigidbody.linearVelocity.magnitude) / 25f);
+  //         carEngineSound.pitch = engineSoundPitch;
+  //       }
+  //       if ((isDrifting) || (isTractionLocked && Mathf.Abs(carSpeed) > 12f))
+  //       {
+  //         if (!tireScreechSound.isPlaying)
+  //         {
+  //           tireScreechSound.Play();
+  //         }
+  //       }
+  //       else if ((!isDrifting) && (!isTractionLocked || Mathf.Abs(carSpeed) < 12f))
+  //       {
+  //         tireScreechSound.Stop();
+  //       }
+  //     }
+  //     catch (Exception ex)
+  //     {
+  //       Debug.LogWarning(ex);
+  //     }
+  //   }
+  //   else if (!useSounds)
+  //   {
+  //     if (carEngineSound != null && carEngineSound.isPlaying)
+  //     {
+  //       carEngineSound.Stop();
+  //     }
+  //     if (tireScreechSound != null && tireScreechSound.isPlaying)
+  //     {
+  //       tireScreechSound.Stop();
+  //     }
+  //   }
+
+  // }
 
   //
   //STEERING METHODS

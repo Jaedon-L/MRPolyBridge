@@ -529,10 +529,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5627324277843759623, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
       propertyPath: useSounds
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5627324277843759623, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
       propertyPath: useVRInput
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6357283164675562370, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6357283164675562370, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6793792204554952704, guid: 0265452adb019e84b90ceb76fd9d0470, type: 3}
+      propertyPath: m_Volume
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
