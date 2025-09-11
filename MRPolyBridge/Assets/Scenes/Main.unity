@@ -42127,6 +42127,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7717463634107780791, guid: 3a1cb258b2a618b409d1350b62923795, type: 3}
+      propertyPath: m_Volume
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 8758760993404492629, guid: 3a1cb258b2a618b409d1350b62923795, type: 3}
       propertyPath: m_Name
       value: TTS
@@ -48073,10 +48077,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: TutorialInstructionMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 5943571819300622900, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: m_Volume
+      value: 0.265
+      objectReference: {fileID: 0}
     - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
       propertyPath: nextButton
       value: 
       objectReference: {fileID: 2123924614}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: endInstructionID
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: instructionDatas.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: instructionDatas.Array.data[6].canByPass
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
       propertyPath: instructionDatas.Array.data[0].procedureData
       value: Point your right hand at the floor and pinch to set your spawn point.
@@ -48088,23 +48108,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
       propertyPath: instructionDatas.Array.data[2].procedureData
-      value: Use the Build Remote on your left hand to toggle Build and Edit modes.
-        Build places platforms; Edit removes them.
+      value: 'Use the Menu on your left hand to switch between different modes. '
       objectReference: {fileID: 0}
     - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
       propertyPath: instructionDatas.Array.data[3].procedureData
-      value: In Build mode, pinch with your left hand to spawn a node. Pinch with
-        your right hand to connect nodes.
+      value: 'In build mode, pinch with your left hand to spawn nodes. Pinch and
+        drag with your right hand to build a platform. Switch between platforms and
+        support with the material button. '
       objectReference: {fileID: 0}
     - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
       propertyPath: instructionDatas.Array.data[4].procedureData
-      value: Add support beams to strengthen your bridge, weak bridges may collapse
-        under your car.
+      value: 'Add support beams to strengthen your bridge, weak bridges may collapse
+        under your car. '
       objectReference: {fileID: 0}
     - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
       propertyPath: instructionDatas.Array.data[5].procedureData
-      value: "Keep an eye on your budget. If you go over, you can\u2019t place any
-        more supports."
+      value: "Keep an eye on your budget. If you go over, you can\u2019t build anymore.
+        Switch to edit mode to clear all or drop into the garbage can. "
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: instructionDatas.Array.data[6].procedureData
+      value: 'Switch to drive mode and change gears to move your car. Pinch your
+        index finger while steering to accelerate. '
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
+      propertyPath: instructionDatas.Array.data[6].instructionsID
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7817389478479273356, guid: 72dac54c529e57348bfdbf329d9ecfab, type: 3}
       propertyPath: instructionDatas.Array.data[1].procedureEvent.m_PersistentCalls.m_Calls.Array.size
