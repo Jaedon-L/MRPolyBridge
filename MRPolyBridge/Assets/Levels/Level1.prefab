@@ -147,7 +147,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8819249476660386516}
-  - component: {fileID: 4059961299714234995}
   m_Layer: 0
   m_Name: Level1
   m_TagString: Untagged
@@ -173,22 +172,6 @@ Transform:
   - {fileID: 7750241128716947410}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4059961299714234995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5327428406052963930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39e75e739be00744fb876e28e1f1efe9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridSize: {x: 0.4865, y: 1, z: 0.511}
-  cellSize: 0.075
-  pointSize: 0.01
-  drawPoints: 1
 --- !u!1 &6375540895967395845
 GameObject:
   m_ObjectHideFlags: 0

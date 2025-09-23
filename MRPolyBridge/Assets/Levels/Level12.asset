@@ -17,9 +17,9 @@ MonoBehaviour:
   budget: 300
   isUnlocked: 0
   starThresholds:
-  - 500
-  - 600
-  - 600
+  - 50
+  - 150
+  - 200
   breakForceThreshold: 4000
   breakTorqueThreshold: 3000
   supportBonusForce: 1000

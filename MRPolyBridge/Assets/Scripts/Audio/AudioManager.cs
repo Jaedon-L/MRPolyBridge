@@ -35,6 +35,11 @@ public class AudioManager : MonoBehaviour
     private float sfxVolume = 1f;
     private bool sfxMuted = false;
 
+    private const string KEY_MUSIC_VOLUME = "AM_MusicVolume";
+    private const string KEY_MUSIC_MUTED = "AM_MusicMuted"; // int 0/1
+    private const string KEY_SFX_VOLUME = "AM_SFXVolume";
+    private const string KEY_SFX_MUTED = "AM_SFXMuted";   // int 0/1
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -52,6 +57,7 @@ public class AudioManager : MonoBehaviour
 
         musicSource.playOnAwake = false;
         musicSource.loop = false;
+        LoadSoundSettings();
 
         // Build SFX dictionary
         foreach (var sfx in sfxClips)
@@ -65,6 +71,8 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
+        ApplyMusicVolumeToSource();
+
         if (musicClips.Count > 0)
         {
             ShuffleTracks();
@@ -124,12 +132,16 @@ public class AudioManager : MonoBehaviour
     {
         musicVolume = Mathf.Clamp01(volume);
         if (!isMuted) musicSource.volume = musicVolume;
+
+        SaveSoundSettings();
     }
 
     public void ToggleMute(bool mute)
     {
         isMuted = mute;
         musicSource.volume = mute ? 0 : musicVolume;
+
+        SaveSoundSettings();
     }
 
     public float GetMusicVolume() => musicVolume;
@@ -139,6 +151,7 @@ public class AudioManager : MonoBehaviour
     public void SetSFXVolume(float volume)
     {
         sfxVolume = Mathf.Clamp01(volume);
+        SaveSoundSettings();
     }
 
     public float GetSFXVolume() => sfxVolume;
@@ -146,6 +159,7 @@ public class AudioManager : MonoBehaviour
     public void ToggleSFXMute(bool mute)
     {
         sfxMuted = mute;
+        SaveSoundSettings();
     }
 
     public bool IsSFXMuted() => sfxMuted;
@@ -163,5 +177,63 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning($"SFX with ID '{id}' not found!");
         }
+    }
+
+    // =========================
+    // PlayerPrefs save / load
+    // =========================
+    public void SaveSoundSettings()
+    {
+        PlayerPrefs.SetFloat(KEY_MUSIC_VOLUME, musicVolume);
+        PlayerPrefs.SetInt(KEY_MUSIC_MUTED, isMuted ? 1 : 0);
+        PlayerPrefs.SetFloat(KEY_SFX_VOLUME, sfxVolume);
+        PlayerPrefs.SetInt(KEY_SFX_MUTED, sfxMuted ? 1 : 0);
+
+        PlayerPrefs.Save();
+    }
+
+    private void LoadSoundSettings()
+    {
+        // defaults: music 1.0, not muted; sfx 1.0, not muted
+        musicVolume = PlayerPrefs.GetFloat(KEY_MUSIC_VOLUME, 1f);
+        isMuted = PlayerPrefs.GetInt(KEY_MUSIC_MUTED, 0) == 1;
+        sfxVolume = PlayerPrefs.GetFloat(KEY_SFX_VOLUME, 1f);
+        sfxMuted = PlayerPrefs.GetInt(KEY_SFX_MUTED, 0) == 1;
+    }
+
+    private void ApplyMusicVolumeToSource()
+    {
+        if (musicSource != null)
+            musicSource.volume = isMuted ? 0f : musicVolume;
+    }
+
+    // optional: call SaveSoundSettings again on shutdown as a last-resort
+    private void OnApplicationQuit()
+    {
+        SaveSoundSettings();
+    }
+
+    private void OnDisable()
+    {
+        // in editor playstop this helps persist final values
+        if (Application.isPlaying) SaveSoundSettings();
+    }
+
+    // Helper to reset saved settings (useful for testing)
+    public void ResetSoundSettings()
+    {
+        PlayerPrefs.DeleteKey(KEY_MUSIC_VOLUME);
+        PlayerPrefs.DeleteKey(KEY_MUSIC_MUTED);
+        PlayerPrefs.DeleteKey(KEY_SFX_VOLUME);
+        PlayerPrefs.DeleteKey(KEY_SFX_MUTED);
+        PlayerPrefs.Save();
+
+        // revert in memory to defaults
+        musicVolume = 1f;
+        isMuted = false;
+        sfxVolume = 1f;
+        sfxMuted = false;
+
+        ApplyMusicVolumeToSource();
     }
 }

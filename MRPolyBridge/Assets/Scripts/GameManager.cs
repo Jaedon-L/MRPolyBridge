@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshPro _levelLabel;
 
     [SerializeField] private TextMeshProUGUI winningText;
+    [SerializeField] private TextMeshProUGUI winAllLevelsText;
     [Header("WIN SCREEN STARS")]
     [Tooltip("Assign the 3 star GameObjects (or Images) in order: star1, star2, star3")]
     [SerializeField] private GameObject[] _starIcons = new GameObject[3];
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
 
     private enum GameState { WaitingToStart, Playing, LevelComplete, AllFinished }
     private GameState _state = GameState.WaitingToStart;
+    [SerializeField] private UnityEvent OnAllLevelsCompleted;
 
     private void Awake()
     {
@@ -73,9 +75,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.AllFinished:
-                // (Optional) restart from Level 1 or disable UI
+                // OnAllLevels();
                 Debug.Log("All levels completed!");
-                winningText.text = "You finished all the levels! Stay tuned for more!!";
                 break;
 
             // While “Playing,” the button should be hidden or disabled
@@ -86,6 +87,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [ContextMenu("onAllLevels")]
+    public void OnAllLevels()
+    {
+        Debug.Log("All levels completed!");
+        OnAllLevelsCompleted.Invoke();
+        winAllLevelsText.text = "You finished all the levels! Stay tuned for more!!";
+    }
     /// <summary>
     /// Load the player's current level from the saved data
     /// </summary>
@@ -102,6 +110,30 @@ public class GameManager : MonoBehaviour
             _currentLevelIndex = 0;
         }
     }
+    [ContextMenu("closeLevel")]
+    public void CloseCurrentLevel()
+    {
+        // 1) Destroy the current level instance
+        if (_currentLevelInstance != null)
+        {
+            Destroy(_currentLevelInstance);
+            _currentLevelInstance = null;
+        }
+
+        // 2) Clear bridge pieces
+        ClearAllBridgePieces();
+
+        // 3) Reset the state back to Waiting
+        _state = GameState.WaitingToStart;
+
+        // 4) (Optional) reset level index if you want to restart from same level
+        // Leave this line if you want to replay the same level after closing:
+        // (if you want to always reset to level 1, set _currentLevelIndex = 0)
+        SaveCurrentLevel();
+
+        Debug.Log("[GameManager] Level closed. Ready to restart.");
+    }
+
 
     /// <summary>
     /// Spawns the prefab at _currentLevelIndex, and wires up its LevelEndTrigger.
@@ -244,6 +276,7 @@ public class GameManager : MonoBehaviour
         {
             // _startOrNextButton.GetComponentInChildren<TextMeshPro>().text = "Finish";
             _state = GameState.AllFinished;
+            OnAllLevels();
         }
 
         SaveLevelData();
@@ -456,7 +489,12 @@ public class GameManager : MonoBehaviour
         {
             Destroy(allSupports[i].gameObject);
         }
-
+        // 4) Destroy every wood platform
+        var allPlatforms = FindObjectsByType<WoodPlatform>(FindObjectsSortMode.None);
+        for (int i = 0; i < allPlatforms.Length; i++)
+        {
+            Destroy(allPlatforms[i].gameObject);
+        }
         // Optionally, clear any internal graph data right away:
         // (If you want to be sure BridgeGraph has no leftover references.)
         BridgeGraph.ClearAll();   // ← see note below

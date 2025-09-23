@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 925007380175428658}
   - component: {fileID: 1093545906912291364}
   - component: {fileID: 4703607371727836023}
+  - component: {fileID: 304586106639553805}
   m_Layer: 6
   m_Name: Floor
   m_TagString: Floor
@@ -257,3 +258,15 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &304586106639553805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4407987262384533846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20366237586efb4faa1820ee3c7e9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

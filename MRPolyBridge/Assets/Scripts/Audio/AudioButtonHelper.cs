@@ -12,9 +12,9 @@ public class AudioButtonHelper : MonoBehaviour
     [Header("Volume Settings")]
     [SerializeField] private RectTransform musicFillBar; // UI bar for Music
     [SerializeField] private RectTransform sfxFillBar;   // UI bar for SFX
-    [SerializeField] private float maxFillWidth = 250f;  
-    [SerializeField] private int steps = 10;             
-    [SerializeField] private float fillLerpSpeed = 10f;  
+    [SerializeField] private float maxFillWidth = 250f;
+    [SerializeField] private int steps = 10;
+    [SerializeField] private float fillLerpSpeed = 10f;
 
     [Header("Mute Button Visuals")]
     [SerializeField] private Image musicMuteButtonImage;
@@ -30,16 +30,21 @@ public class AudioButtonHelper : MonoBehaviour
     private float targetMusicWidth;
     private float targetSFXWidth;
 
+    private void Awake()
+    {
+        stepSize = 1f / Mathf.Max(1, steps);
+    }
+
+    private void OnEnable()
+    {
+        // Always refresh when enabled so UI matches saved manager state
+        Refresh();
+    }
+
     private void Start()
     {
-        stepSize = 1f / steps;
-
-        currentMusicVolume = AudioManager.Instance.GetMusicVolume();
-        currentSFXVolume = AudioManager.Instance.GetSFXVolume();
-
-        targetMusicWidth = currentMusicVolume * maxFillWidth;
-        targetSFXWidth = currentSFXVolume * maxFillWidth;
-
+        // Ensure UI immediately matches persisted settings on first start
+        Refresh();
         UpdateFillBarInstant();
         UpdateMuteVisuals();
     }
@@ -61,22 +66,49 @@ public class AudioButtonHelper : MonoBehaviour
         }
     }
 
+    // ===================== Public API =====================
+    // Call this if settings may have changed outside the helper
+    public void Refresh()
+    {
+        if (AudioManager.Instance == null) return;
+
+        // Read current saved values
+        currentMusicVolume = AudioManager.Instance.GetMusicVolume();
+        currentSFXVolume = AudioManager.Instance.GetSFXVolume();
+
+        // If muted, show the bar as empty (but keep currentVolume intact)
+        targetMusicWidth = AudioManager.Instance.IsMuted() ? 0f : currentMusicVolume * maxFillWidth;
+        targetSFXWidth = AudioManager.Instance.IsSFXMuted() ? 0f : currentSFXVolume * maxFillWidth;
+
+        // Immediately set fill sizes so UI matches saved/muted state on load
+        UpdateFillBarInstant();
+        UpdateMuteVisuals();
+    }
+
     // ===================== Music Controls =====================
     [ContextMenu("increaseMusic")]
     public void IncreaseMusicVolume()
     {
+        if (AudioManager.Instance == null) return;
+
+        // If currently muted, unmute first (and restore visuals)
         if (AudioManager.Instance.IsMuted())
             AudioManager.Instance.ToggleMute(false);
 
         currentMusicVolume = Mathf.Clamp01(currentMusicVolume + stepSize);
         AudioManager.Instance.SetMusicVolume(currentMusicVolume);
+
+        // when unmuted, target should reflect new volume
         targetMusicWidth = currentMusicVolume * maxFillWidth;
 
         UpdateMuteVisuals();
     }
+
     [ContextMenu("decreaseMusic")]
     public void DecreaseMusicVolume()
     {
+        if (AudioManager.Instance == null) return;
+
         if (AudioManager.Instance.IsMuted())
             AudioManager.Instance.ToggleMute(false);
 
@@ -84,18 +116,27 @@ public class AudioButtonHelper : MonoBehaviour
         AudioManager.Instance.SetMusicVolume(currentMusicVolume);
         targetMusicWidth = currentMusicVolume * maxFillWidth;
 
+        // auto-mute when hitting zero
         if (currentMusicVolume <= 0f && !AudioManager.Instance.IsMuted())
+        {
             AudioManager.Instance.ToggleMute(true);
+            // reflect mute visually (targetWidth already set to 0 after ToggleMute via Refresh below)
+        }
 
-        UpdateMuteVisuals();
+        // ensure visuals are consistent (ToggleMute will save state, but call Refresh to update target if muted)
+        Refresh();
     }
+
     [ContextMenu("toggleMusic")]
     public void ToggleMusicMute()
     {
+        if (AudioManager.Instance == null) return;
+
         bool newMute = !AudioManager.Instance.IsMuted();
         AudioManager.Instance.ToggleMute(newMute);
-        targetMusicWidth = newMute ? 0f : currentMusicVolume * maxFillWidth;
 
+        // Set visual target: 0 if muted, else the stored volume
+        targetMusicWidth = newMute ? 0f : currentMusicVolume * maxFillWidth;
         UpdateMuteVisuals();
     }
 
@@ -103,18 +144,23 @@ public class AudioButtonHelper : MonoBehaviour
     [ContextMenu("increaseSFX")]
     public void IncreaseSFXVolume()
     {
+        if (AudioManager.Instance == null) return;
+
         if (AudioManager.Instance.IsSFXMuted())
             AudioManager.Instance.ToggleSFXMute(false);
 
         currentSFXVolume = Mathf.Clamp01(currentSFXVolume + stepSize);
         AudioManager.Instance.SetSFXVolume(currentSFXVolume);
-        targetSFXWidth = currentSFXVolume * maxFillWidth;
 
+        targetSFXWidth = currentSFXVolume * maxFillWidth;
         UpdateMuteVisuals();
     }
+
     [ContextMenu("decreaseSFX")]
     public void DecreaseSFXVolume()
     {
+        if (AudioManager.Instance == null) return;
+
         if (AudioManager.Instance.IsSFXMuted())
             AudioManager.Instance.ToggleSFXMute(false);
 
@@ -123,17 +169,22 @@ public class AudioButtonHelper : MonoBehaviour
         targetSFXWidth = currentSFXVolume * maxFillWidth;
 
         if (currentSFXVolume <= 0f && !AudioManager.Instance.IsSFXMuted())
+        {
             AudioManager.Instance.ToggleSFXMute(true);
+        }
 
-        UpdateMuteVisuals();
+        Refresh();
     }
+
     [ContextMenu("toggleSFX")]
     public void ToggleSFXMute()
     {
+        if (AudioManager.Instance == null) return;
+
         bool newMute = !AudioManager.Instance.IsSFXMuted();
         AudioManager.Instance.ToggleSFXMute(newMute);
-        targetSFXWidth = newMute ? 0f : currentSFXVolume * maxFillWidth;
 
+        targetSFXWidth = newMute ? 0f : currentSFXVolume * maxFillWidth;
         UpdateMuteVisuals();
     }
 
@@ -149,16 +200,20 @@ public class AudioButtonHelper : MonoBehaviour
 
     private void UpdateMuteVisuals()
     {
+        if (AudioManager.Instance == null) return;
+
         // Music visuals
+        bool musicMuted = AudioManager.Instance.IsMuted();
         if (musicMuteButtonImage != null)
-            musicMuteButtonImage.color = AudioManager.Instance.IsMuted() ? mutedColor : soundOnColor;
+            musicMuteButtonImage.color = musicMuted ? mutedColor : soundOnColor;
         if (musicMuteOverlayImage != null)
-            musicMuteOverlayImage.enabled = AudioManager.Instance.IsMuted();
+            musicMuteOverlayImage.enabled = musicMuted;
 
         // SFX visuals
+        bool sfxMuted = AudioManager.Instance.IsSFXMuted();
         if (sfxMuteButtonImage != null)
-            sfxMuteButtonImage.color = AudioManager.Instance.IsSFXMuted() ? mutedColor : soundOnColor;
+            sfxMuteButtonImage.color = sfxMuted ? mutedColor : soundOnColor;
         if (sfxMuteOverlayImage != null)
-            sfxMuteOverlayImage.enabled = AudioManager.Instance.IsSFXMuted();
+            sfxMuteOverlayImage.enabled = sfxMuted;
     }
 }

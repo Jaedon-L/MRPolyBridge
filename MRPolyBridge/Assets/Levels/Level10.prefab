@@ -12520,6 +12520,8 @@ MonoBehaviour:
   autoLaunch: 1
   launcherSound: {fileID: 5580126748673716965}
   explosionSound: {fileID: 7892732478731607430}
+  launcherVolumeMultiplier: 1
+  explosionVolumeMultiplier: 1
 --- !u!82 &5580126748673716965
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13581,6 +13583,10 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7130866671606500991, guid: 37d17ab2e1c2d5142b25f44eb53b2b10, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 6135440026374413379}
     - target: {fileID: 7657430590992573491, guid: 37d17ab2e1c2d5142b25f44eb53b2b10, type: 3}
       propertyPath: m_LocalScale.x
       value: 5.28
